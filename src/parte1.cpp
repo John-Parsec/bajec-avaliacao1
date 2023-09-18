@@ -8,24 +8,24 @@ struct Data{
     short int dia;
     short int mes;
     int ano;
-}
+};
 
-struct Horario{
+struct Hora{
     short int hora;
     short int minuto;
-}
+};
 
 struct DataHora{
     Data data;
-    Horario horario;
-}
+    Hora horario;
+};
 
 struct Passageiro{
     string CPF;
     string nome;
     Data DtNascimento;
     string NumAutorizacao = "";
-}
+};
 
 struct Roteiro{
     string codigo;
@@ -33,20 +33,40 @@ struct Roteiro{
     Hora duracao;
     string origem;
     string destino;
-}
+};
+
+bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao);
+bool deletePassageiro(vector<Passageiro> &passageiros, string CPF);
+bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao);
+bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao = "");
+bool inicializaData(Data &data, short int dia, short int mes, int ano);
+bool inicializaHora(Hora &Hora, short int hora, short int minuto);
+bool inicializaDataHora(DataHora &datahora, short int min, short int hora, short int dia, short int mes, int ano);
+bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+bool validaDataHora(DataHora datahora);
+bool validaData(short int dia, short int mes, int ano);
+bool validaHora(short int hora, short int minuto);
+bool validaDuracao(short int hora, short int minuto);
+bool incializaDuracao(Hora &duracao, short int hora, short int minuto);
+void menuPassageiros(vector<Passageiro> &passageiros);
+void listPassageiros(vector<Passageiro> passageiros);
+bool buscPassageiro(vector<Passageiro> passageiros, string CPF);
+string formatData(Data data);
+
+
 
 int main(){
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
 
-    
+    menuPassageiros(passageiros);
 
 
     return 0;
 }
 
 
-void menuPassageiros(vextor<Passageiro> &passageiros){
+void menuPassageiros(vector<Passageiro> &passageiros){
     int opc, ano;
     string CPF, nome, NumAutorizacao;
     short int dia, mes;
@@ -130,11 +150,11 @@ void menuPassageiros(vextor<Passageiro> &passageiros){
                 cout << "Digite a opcao desejada: ";
                 cin >> opc;
                 break;
+        }
     }while(opc != 6);
-
 }
 
-bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
+bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao){
     Passageiro pas;
 
     if(inicializaPassageiro(&pas, CPF, nome, diaNasc, mesNasc, anoNasc, NumAutorizacao)){
@@ -193,9 +213,9 @@ bool buscPassageiro(vector<Passageiro> passageiros, string CPF){
     return false;
 }
 
-bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
+bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao){
     Data data;
-    if(inicializaData(&data, diaNasc, mesNasc, anoNasc)){
+    if(inicializaData(data, diaNasc, mesNasc, anoNasc)){
         for (int i = 0; i < passageiros.size(); i++){
             if (passageiros[i].CPF == CPF){
                 passageiros[i].nome = nome;
@@ -212,29 +232,29 @@ bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, 
 }
 
 
-bool inicializaHora(Hora &hora, short int hora, short int minuto){
+bool inicializaHora(Hora &Hora, short int hora, short int minuto){
 
     if (validaHora(hora, minuto)){
-        hora->hora = hora;
-        hora->minuto = minuto;
+        Hora.hora = hora;
+        Hora.minuto = minuto;
         return true;
     }else{
-        hora->hora = 0;
-        hora->minuto = 0;
+        Hora.hora = 0;
+        Hora.minuto = 0;
         return false;
     }
 }
 
 bool inicializaData(Data &data, short int dia, short int mes, int ano){
     if (validarData(dia, mes, ano)){
-        data->dia = dia;
-        data->mes = mes;
-        data->ano = ano;
+        data.dia = dia;
+        data.mes = mes;
+        data.ano = ano;
         return true;
     }else{
-        data->dia = 0;
-        data->mes = 0;
-        data->ano = 0;
+        data.dia = 0;
+        data.mes = 0;
+        data.ano = 0;
         return false;
     }
 }
@@ -251,6 +271,7 @@ bool inicializaDataHora(DataHora &datahora, short int min, short int hora, short
     else
         return false;
 }
+
 
 bool validarData(short int dia, short int mes, int ano){
     if (ano < 0 || mes < 1 || mes > 12 || dia <1){
@@ -282,55 +303,65 @@ bool validaHora(short int hora, short int minuto){
 }
 
 bool validaDataHora(DataHora datahora){
-    if (validarData(datahora->data->dia, datahora->data->mes, datahora->data->ano) && validaHora(datahora->hora->hora, datahora->hora->minuto)){
+    if (validarData(datahora.data.dia, datahora.data.mes, datahora.data.ano) && validaHora(datahora.hora.hora, datahora.hora.minuto)){
         return true;
     }else{
         return false;
     }
 }
 
-bool validaDuracao(shor int hora, short int miuto){
+bool validaDuracao(short int hora, short int minuto){
     if (hora < 0 || minuto < 0 || minuto > 59){
         return false;
     }
     return true;
 }
 
-bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao = ""){
-    Data DtNascimento;
-    if (inicializaData(&DtNascimento, dia, mes, ano)){
-        pas->CPF = CPF;
-        pas->nome = nome;
-        pas->DtNascimento = DtNascimento;
-        pas->NumAutorizacao = NumAutorizacao;
+bool incializaDuracao(Hora &duracao, short int hora, short int minuto){
+    if (validaDuracao(hora, minuto)){
+        duracao.hora = hora;
+        duracao.minuto = minuto;
         return true;
     }else{
-        pas->CPF = "";
-        pas->nome = "";
-        pas->DtNascimento = 0;
-        pas->NumAutorizacao = "";
+        duracao.hora = 0;
+        duracao.minuto = 0;
+        return false;
+    }
+}
+
+bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao){
+    Data DtNascimento;
+    if (inicializaData(&DtNascimento, dia, mes, ano)){
+        pas.CPF = CPF;
+        pas.nome = nome;
+        pas.DtNascimento = DtNascimento;
+        pas.NumAutorizacao = NumAutorizacao;
+        return true;
+    }else{
+        pas.CPF = "";
+        pas.nome = "";
+        pas.DtNascimento = DtNascimento;
+        pas.NumAutorizacao = "";
         return false;
     }
 }
 
 
 bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
-    if (validaDataHora(DataHora datahora) && validaDuracao(duracaoHora, duracaoMin)){
-        rot->codigo = codigo;
-        rot->datahora = datahora;
-        rot->duracao = duracao;
-        rot->origem = origem;
-        rot->destino = destino;
+    Hora duracao;
+    if (validaDataHora(datahora) && incializaDuracao(duracao, duracaoHora, duracaoMin)){
+        rot.codigo = codigo;
+        rot.datahora = datahora;
+        rot.duracao = duracao;
+        rot.origem = origem;
+        rot.destino = destino;
         return true;
     }else{
-        rot->codigo = "";
-        rot->datahora = 0;
-        rot->duracao = 0;
-        rot->origem = "";
-        rot->destino = "";
+        rot.codigo = "";
+        rot.datahora = datahora;
+        rot.duracao = duracao;
+        rot.origem = "";
+        rot.destino = "";
         return false;
     }
 }
-
-
-
