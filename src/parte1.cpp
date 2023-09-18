@@ -46,13 +46,92 @@ int main(){
 }
 
 
-void menuPassageiros(){
-    cout << "1 - Adicionar passageiro" << endl;
-    cout << "2 - Remover passageiro" << endl;
-    cout << "3 - Alterar passageiro" << endl;
-    cout << "4 - Listar passageiros" << endl;
-    cout << "5 - Voltar" << endl;
-    cout << "Digite a opcao desejada: ";
+void menuPassageiros(vextor<Passageiro> &passageiros){
+    int opc, ano;
+    string CPF, nome, NumAutorizacao;
+    short int dia, mes;
+
+    do{
+        cout << "1 - Adicionar passageiro" << endl;
+        cout << "2 - Remover passageiro" << endl;
+        cout << "3 - Alterar passageiro" << endl;
+        cout << "4 - Listar passageiros" << endl;
+        cout << "5 - Busca passageiro" << endl;
+        cout << "6 - Sair" << endl;
+        cout << "Digite a opcao desejada: ";
+        cin >> opc;
+
+        switch (opc){
+            case 1:
+                cout << "CPF: ";
+                cin >> CPF;
+                cout << "Nome do passageiro: ";
+                cin >> nome;
+                cout << "Dia de nascimento: ";
+                cin >> dia;
+                cout << "Mes de nascimento: ";
+                cin >> mes;
+                cout << "Ano de nascimento: ";
+                cin >> ano;
+                cout << "Digite o numero de autorizacao do passageiro: ";
+                cin >> NumAutorizacao;
+                if (addPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao)){
+                    cout << "Passageiro adicionado com sucesso." << endl;
+                }else{
+                    cout << "Erro ao adicionar passageiro." << endl;
+                }
+                break;
+            case 2:
+                cout << "Digite o CPF do passageiro: ";
+                cin >> CPF;
+                if (deletePassageiro(passageiros, CPF)){
+                    cout << "Passageiro removido com sucesso." << endl;
+                }else{
+                    cout << "Erro ao remover passageiro." << endl;
+                }
+                break;
+            case 3:
+                cout << "Digite o CPF do passageiro: ";
+                cin >> CPF;
+                if(buscPassageiro(passageiros, CPF)){
+                    cout << "Novo nome: ";
+                    cin >> nome;
+                    cout << "Novo dia de nascimento: ";
+                    cin >> dia;
+                    cout << "Novo mes de nascimento: ";
+                    cin >> mes;
+                    cout << "Novo ano de nascimento : ";
+                    cin >> ano;
+                    cout << "Novo numero de autorizacao : ";
+                    cin >> NumAutorizacao;
+                    if (alteraPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao)){
+                        cout << "Passageiro alterado com sucesso." << endl;
+                    }else{
+                        cout << "Erro ao alterar passageiro." << endl;
+                    }
+                }
+                break;
+            case 4:
+                listPassageiros(passageiros);
+                break;
+            case 5:
+                cout << "Digite o CPF do passageiro: ";
+                cin >> CPF;
+                if (buscPassageiro(passageiros, CPF)){
+                    cout << "Passageiro encontrado." << endl;
+                }else{
+                    cout << "Passageiro nao encontrado." << endl;
+                }
+                break;
+            case 6:
+                break;
+            default:
+                cout << "Opcao invalida." << endl;
+                cout << "Digite a opcao desejada: ";
+                cin >> opc;
+                break;
+    }while(opc != 6);
+
 }
 
 bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
