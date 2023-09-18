@@ -1,0 +1,417 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct passageiro{
+    string nome;
+    string cpf;
+    string dataNascimento;
+    string numAutorizacao;
+};
+
+struct roteiro{
+    string origem;
+    string destino;
+    string codigo;
+    string data_horaPrevista;
+    string duracao;
+};
+
+void gerirPassageiros(vector<passageiro> &passageiros);
+void incluirPassageiro(vector<passageiro> &passageiros);
+void excluirPassageiro(vector<passageiro> &passageiros);
+void alterarPassageiro(vector<passageiro> &passageiros);
+void listarPassageiros(vector<passageiro> &passageiros);
+void localizarPassageiro(vector<passageiro> &passageiros);
+
+void gerirRoteiros(vector<roteiro> &roteiros);
+void incluirRoteiro(vector<roteiro> &roteiros);
+void excluirRoteiro(vector<roteiro> &roteiros);
+void alterarRoteiro(vector<roteiro> &roteiros);
+void listarRoteiros(vector<roteiro> &roteiros);
+void localizarRoteiro(vector<roteiro> &roteiros);
+
+int main(void){
+    int opt;
+    vector<passageiro> passageiros;
+    vector<roteiro> roteiros;
+
+    do{
+        cout << "Menu de opções" << endl << endl;
+        cout << "1. Gerir passageiros." << endl;
+        cout << "2. Gerir roteiros." << endl;
+        cout << "0. Sair." << endl;
+        cin >> opt;
+
+        if(opt == 0){
+            return 0;
+        }
+        else if(opt == 1){
+            gerirPassageiros(passageiros);
+        }
+        else if(opt == 2){
+            gerirRoteiros(roteiros);
+        }
+        else{
+            cout << "Opção inválida!" << endl;
+        }
+    }while(opt!=0);
+
+    return 0;
+}
+
+void gerirPassageiros(vector<passageiro> &passageiros){
+    short int opt;
+
+    do{
+        //system("clear");
+        
+        cout << "\n\nMenu de opções (Passageiros)" << endl;
+        cout << "1. Incluir." << endl;
+        cout << "2. Excluir" << endl;
+        cout << "3. Alterar" << endl;
+        cout << "4. Listar" << endl;
+        cout << "5. Localizar" << endl;
+        cout << "0. Sair." << endl;
+
+        cout << "Escolha uma opção: ";
+        cin >> opt;
+
+        switch (opt){
+            case 0:
+                cout << endl;
+                break;
+            case 1:
+                incluirPassageiro(passageiros);
+                break;
+            case 2:
+                excluirPassageiro(passageiros);
+                break;
+            case 3:
+                alterarPassageiro(passageiros);
+                break;
+            case 4:
+                listarPassageiros(passageiros);
+                break;
+            case 5: 
+                localizarPassageiro(passageiros);
+                break;
+            default:
+                cout << "Opção inválida!" << endl;
+                break;
+        }
+    }while(opt != 0);
+}
+
+void incluirPassageiro(vector<passageiro> &passageiros){
+    passageiro p;
+    int idade;
+
+    cout << "Nome: ";
+    cin >> p.nome;
+    cout << "CPF: ";
+    cin >> p.cpf;
+    cout << "Data de nascimento: ";
+    cin >> p.dataNascimento;
+    cout << "Idade: ";
+    cin >> idade;
+
+    if(idade < 18){
+        cout << "Número de autorização: ";
+        cin >> p.numAutorizacao;
+    }
+
+    passageiros.push_back(p);
+}
+
+void excluirPassageiro(vector<passageiro> &passageiros){
+    bool achou = false;
+    string cpf;
+    cout << "CPF: ";
+    cin >> cpf;
+
+    for(auto it = passageiros.begin(); it != passageiros.end(); it++){
+        if(it->cpf == cpf){
+            passageiros.erase(it);
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nPassageiro não encontrado!" << endl;
+    }
+    else{
+        cout << "\nPassageiro excluído com sucesso!" << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void alterarPassageiro(vector<passageiro> &passageiros){
+    bool achou = false;
+    char opt;
+    string cpf;
+    cout << "CPF: ";
+    cin >> cpf;
+
+    for(auto it = passageiros.begin(); it != passageiros.end(); it++){
+        if(it->cpf == cpf){
+            cout << "Deseja alterar o nome? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Nome: ";
+                cin >> it->nome;
+            }
+            
+            cout << "Deseja alterar o CPF? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "CPF: ";
+                cin >> it->cpf;
+            }
+            
+            cout << "Deseja alterar a data de nascimento? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Data de nascimento: ";
+                cin >> it->dataNascimento;
+            }
+            
+            cout << "Deseja alterar o número de autorização? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Número de autorização: ";
+                cin >> it->numAutorizacao;
+            }
+
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nPassageiro não encontrado!" << endl;
+    }
+    else{
+        cout << "\nDado(s) alterado com sucesso!" << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void listarPassageiros(vector<passageiro> &passageiros){
+    cout << endl;
+
+    for(auto it = passageiros.begin(); it != passageiros.end(); it++){
+        cout << "Nome: " << it->nome << endl;
+        cout << "CPF: " << it->cpf << endl;
+        cout << "Data de nascimento: " << it->dataNascimento << endl;
+        cout << "Número de autorização: " << it->numAutorizacao << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void localizarPassageiro(vector<passageiro> &passageiros){
+    bool achou = false;
+    string cpf;
+    cout << "CPF: ";
+    cin >> cpf;
+
+    for(auto it = passageiros.begin(); it != passageiros.end(); it++){
+        if(it->cpf == cpf){
+            cout << "Nome: " << it->nome << endl;
+            cout << "CPF: " << it->cpf << endl;
+            cout << "Data de nascimento: " << it->dataNascimento << endl;
+            cout << "Número de autorização: " << it->numAutorizacao << endl;
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nPassageiro não encontrado!" << endl;
+    }
+}
+
+void gerirRoteiros(vector<roteiro> &roteiros){
+    short int opt;
+
+    do{
+        system("clear");
+        
+        cout << "\n\nMenu de opções (Roteiros)" << endl;
+        cout << "1. Incluir." << endl;
+        cout << "2. Excluir" << endl;
+        cout << "3. Alterar" << endl;
+        cout << "4. Listar" << endl;
+        cout << "5. Localizar" << endl;
+        cout << "0. Sair." << endl;
+
+        cout << "Escolha uma opção: ";
+        cin >> opt;
+
+        switch (opt){
+            case 0:
+                cout << endl;
+                break;
+            case 1:
+                incluirRoteiro(roteiros);
+                break;
+            case 2:
+                excluirRoteiro(roteiros);
+                break;
+            case 3:
+                alterarRoteiro(roteiros);
+                break;
+            case 4:
+                listarRoteiros(roteiros);
+                break;
+            case 5: 
+                localizarRoteiro(roteiros);
+                break;
+            default:
+                cout << "Opção inválida!" << endl;
+                break;
+        }
+    }while(opt != 0);
+}
+
+void incluirRoteiro(vector<roteiro> &roteiros){
+    roteiro r;
+
+    cout << "Origem: ";
+    cin >> r.origem;
+    cout << "Destino: ";
+    cin >> r.destino;
+    cout << "Código: ";
+    cin >> r.codigo;
+    cout << "Data e hora prevista: ";
+    cin >> r.data_horaPrevista;
+    cout << "Duração: ";
+    cin >> r.duracao;
+
+    roteiros.push_back(r);
+}
+
+void excluirRoteiro(vector<roteiro> &roteiros){
+    bool achou = false;
+    string codigo;
+    cout << "Código: ";
+    cin >> codigo;
+
+    for(auto it = roteiros.begin(); it != roteiros.end(); it++){
+        if(it->codigo == codigo){
+            roteiros.erase(it);
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nRoteiro não encontrado!" << endl;
+    }
+    else{
+        cout << "\nRoteiro excluído com sucesso!" << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void alterarRoteiro(vector<roteiro> &roteiros){
+    bool achou = false;
+    char opt;
+    string codigo;
+    cout << "Código: ";
+    cin >> codigo;
+
+    for(auto it = roteiros.begin(); it != roteiros.end(); it++){
+        if(it->codigo == codigo){
+            cout << "Deseja alterar a origem? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Origem: ";
+                cin >> it->origem;
+            }
+            
+            cout << "Deseja alterar o destino? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Destino: ";
+                cin >> it->destino;
+            }
+            
+            cout << "Deseja alterar o código? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Código: ";
+                cin >> it->codigo;
+            }
+            
+            cout << "Deseja alterar a data e hora prevista? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Data e hora prevista: ";
+                cin >> it->data_horaPrevista;
+            }
+            
+            cout << "Deseja alterar a duração? (s/n): ";
+            cin >> opt;
+            if(opt == 's'){
+                cout << "Duração: ";
+                cin >> it->duracao;
+            }
+
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nRoteiro não encontrado!" << endl;
+    }
+    else{
+        cout << "\nDado(s) alterado com sucesso!" << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void listarRoteiros(vector<roteiro> &roteiros){
+    cout << endl;
+
+    for(auto it = roteiros.begin(); it != roteiros.end(); it++){
+        cout << "Origem: " << it->origem << endl;
+        cout << "Destino: " << it->destino << endl;
+        cout << "Código: " << it->codigo << endl;
+        cout << "Data e hora prevista: " << it->data_horaPrevista << endl;
+        cout << "Duração: " << it->duracao << endl;
+    }
+
+    //system("PAUSE");
+}
+
+void localizarRoteiro(vector<roteiro> &roteiros){
+    bool achou = false;
+    string codigo;
+    cout << "Código: ";
+    cin >> codigo;
+
+    for(auto it = roteiros.begin(); it != roteiros.end(); it++){
+        if(it->codigo == codigo){
+            cout << "Origem: " << it->origem << endl;
+            cout << "Destino: " << it->destino << endl;
+            cout << "Código: " << it->codigo << endl;
+            cout << "Data e hora prevista: " << it->data_horaPrevista << endl;
+            cout << "Duração: " << it->duracao << endl;
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "\nRoteiro não encontrado!" << endl;
+    }
+}
