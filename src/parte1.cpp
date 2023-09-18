@@ -62,17 +62,44 @@ int main(){
 }
 
 void IncluirPassageiro(vector<Passageiro> &passageiros){
-    Passageiro passageiro;
-    cout << "Digite o CPF: ";
-    cin >> passageiro.Cpf;
-    cout << "Digite o Nome: ";
-    cin >> passageiro.Nome;
-    cout << "Digite a Data de Nascimento: ";
-    cin >> passageiro.DtNascimento;
-    cout << "Digite o Numero de Autorizacao: ";
-    cin >> passageiro.NumAutorizacao;
 
-    passageiros.push_back(passageiro);
+    string cpf;
+    Passageiro passageiro;
+
+    cout << "Digite o CPF: ";
+    cin >> cpf;
+
+
+    if(passageiros.size() == 0){
+        passageiro.Cpf = cpf;
+        cout << "Digite o Nome: ";
+        cin >> passageiro.Nome;
+        cout << "Digite a Data de Nascimento: ";
+        cin >> passageiro.DtNascimento;
+        cout << "Digite o Numero de Autorizacao: ";
+        cin >> passageiro.NumAutorizacao;
+        passageiros.push_back(passageiro);
+        cout << "Passageiro incluido com sucesso!" << endl;
+        return;
+    }
+    else{
+        for(int i = 0; i < passageiros.size(); i++){
+            if(passageiros[i].Cpf == cpf){
+                cout << "Passageiro ja cadastrado!" << endl;
+                return;
+            }
+            passageiro.Cpf = cpf;
+            cout << "Digite o Nome: ";
+            cin >> passageiro.Nome;
+            cout << "Digite a Data de Nascimento: ";
+            cin >> passageiro.DtNascimento;
+            cout << "Digite o Numero de Autorizacao: ";
+            cin >> passageiro.NumAutorizacao;
+            passageiros.push_back(passageiro);
+            cout << "Passageiro incluido com sucesso!" << endl;
+            return;
+        }
+    }
 }
 
 void ExcluirPassageiro(vector<Passageiro> &passageiros){
@@ -128,17 +155,25 @@ void AlterarPassageiro(vector<Passageiro> &passageiros){
                 cin >> passageiros[i].NumAutorizacao;
             }
             cout << "Passageiro alterado com sucesso!" << endl;
+            return;
         }
     }
+    cout << "Passageiro nao encontrado!" << endl;
 }
 
 void ListarPassageiro(vector<Passageiro> &passageiros){
-    for(int i = 0; i < passageiros.size(); i++){
-        cout << "CPF: " << passageiros[i].Cpf << endl;
-        cout << "Nome: " << passageiros[i].Nome << endl;
-        cout << "Data de Nascimento: " << passageiros[i].DtNascimento << endl;
-        cout << "Numero de Autorizacao: " << passageiros[i].NumAutorizacao << endl;
-        cout << "-------------------------------------" << endl;
+    if(passageiros.size() == 0){
+        cout << "Nao ha passageiros cadastrados!" << endl;
+        return;
+    }
+    else{
+        for(int i = 0; i < passageiros.size(); i++){
+            cout << "CPF: " << passageiros[i].Cpf << endl;
+            cout << "Nome: " << passageiros[i].Nome << endl;
+            cout << "Data de Nascimento: " << passageiros[i].DtNascimento << endl;
+            cout << "Numero de Autorizacao: " << passageiros[i].NumAutorizacao << endl;
+            cout << "-------------------------------------" << endl;
+        }
     }
 }
 
