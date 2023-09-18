@@ -28,6 +28,16 @@ void incluir_passageiro(vector<passageiro>& vec)
     std::getline(cin >> ws, novo.Nome);
     std::cout << "CPF: ";
     std::cin >> novo.CPF;
+    for(int i = 0; i < vec.size(); i++)
+    {
+        if(novo.CPF == vec[i].CPF)
+        {
+            std::cout << "Esse CPF já existe, por favor insira outro: ";
+            std::cin >> novo.CPF;
+            i = -1;
+        }
+    }
+
     std::cout << "Data de nascimento (dd/mm/aaaa): ";
     std::cin >> novo.DtNascimento;
 
@@ -81,20 +91,95 @@ void alterar_passageiro(vector<passageiro>& vec)
 {
     std::cout << endl;
 
+    string  cpf;
+    std::cout << "Digite o CPF do passageiro: "; 
+    std::cin >> cpf;
+
+    bool check = 0;
+    int index;
     for(int i = 0; i < vec.size(); i++)
     {
-        std::cout << "CPF: " << vec[i].CPF << endl;
-        std::cout << "Nome: " << vec[i].Nome << endl;
-        std::cout << "Data de Nascimento: " << vec[i].DtNascimento << endl;
+        if(vec[i].CPF == cpf)
+        {
+            std::cout << "Nome: " << vec[i].Nome << endl;
+            std::cout << "Data de Nascimento: " << vec[i].DtNascimento << endl;
 
-        string dataaux = vec[i].DtNascimento.substr(6, 4);
-        if(stoi(dataaux) > 2005)
-        {  
-            std::cout << "Numero de autorizacao: " << vec[i].NumAutorizacao << endl;
-        }   
+            string dataaux = vec[i].DtNascimento.substr(6, 4);
+            if(stoi(dataaux) > 2005)
+            {  
+                std::cout << "Numero de autorizacao: " << vec[i].NumAutorizacao << endl;
+            }
 
-        std::cout << "-------------------------" << endl << endl;
+            index = i;
+            i += vec.size();
+            check = 1;
+        }
     }
+
+    if(check)
+    {
+        bool acao = 0;
+        std::cout << "Deseja alterar o nome? (sim = 1 / nao = 0): ";
+        std::cin >> acao;
+        if(acao)
+        {
+            std::cout << "Nome: ";
+            std::cin >> vec[index].Nome;
+        }
+
+        std::cout << "Deseja alterar o CPF? (sim = 1 / nao = 0): ";
+        std::cin >> acao;
+        if(acao)
+        {
+            string cpf;
+            std::cout << "CPF: ";
+            std::cin >> cpf;
+            for(int i = 0; i < vec.size(); i++)
+            {
+                if(cpf == vec[i].CPF && i!=index)
+                {
+                    std::cout << "Esse CPF já existe, por favor insira outro: ";
+                    std::cin >> cpf;
+                    i = -1;
+                }
+            } 
+            vec[index].CPF = cpf;
+        }
+
+        std::cout << "Deseja alterar a Data de Nascimento? (sim = 1 / nao = 0): ";
+        std::cin >> acao;
+        if(acao)
+        {
+            std::cout << "Data de Nascimento: ";
+            std::cin >> vec[index].DtNascimento;
+        }
+
+        string dataaux = vec[index].DtNascimento.substr(6, 4);
+        if(stoi(dataaux) > 2005 && vec[index].NumAutorizacao != "")
+        {
+            std::cout << "Deseja alterar a Data de Nascimento? (sim = 1 / nao = 0): ";
+            std::cin >> acao;
+            if(acao)
+            {
+                std::cout << "Data de Nascimento: ";
+                std::cin >> vec[index].DtNascimento;
+            }
+        }
+        else if(stoi(dataaux) > 2005)
+        {
+            std::cout << "Numero de autorizacao: ";
+            std::cin >> vec[index].NumAutorizacao;
+        }
+    }
+
+    bool alterarNovo;
+    if(!check)
+        std::cout << "CPF nao encontrado, deseja tentar de novo? (sim = 1 / nao = 0): ";
+    else
+        std::cout << "Passageiro alterado com sucesso, deseja alterar outro? (sim = 1 / nao = 0): ";
+
+    std::cin >> alterarNovo;
+    if(alterarNovo) {(alterar_passageiro(vec));}
 }
 
 void listar_passageiro(vector<passageiro>& vec)
