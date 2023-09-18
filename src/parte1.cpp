@@ -364,11 +364,7 @@ void incluirRoteiro(vector<roteiro> &roteiros){
     cout << "Duração: ";
     cin >> r.duracao;
 
-    roteiros.push
-    if(!validaHora(r.data_horaPrevista)){
-        cout << "Hora inválida!" << endl;
-        return;
-    }_back(r);
+    roteiros.push_back(r);
 }
 
 void excluirRoteiro(vector<roteiro> &roteiros){
