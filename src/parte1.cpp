@@ -60,6 +60,18 @@ bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, sho
 }
 
 
+bool deletePassageiro(vector<Passageiro> &passageiros, string CPF){
+    for (int i = 0; i < passageiros.size(); i++){
+        if (passageiros[i].CPF == CPF){
+            passageiros.erase(passageiros.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 
 
 bool inicializaHora(Hora &hora, short int hora, short int minuto){
