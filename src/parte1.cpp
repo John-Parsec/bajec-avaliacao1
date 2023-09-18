@@ -138,10 +138,10 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
 }
 
 
-bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, Hora duracao, string origem, string destino){
+bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
     DataHora datahora;
     
-    if (inicializaDataHora(&datahora, Data data, Hora hora) && validaDuracao(duracao->hora, duracao->minu)){
+    if (&& validaDuracao(duracao->hora, duracao->minu)){
         rot->codigo = codigo;
         rot->datahora = datahora;
         rot->duracao = duracao;
