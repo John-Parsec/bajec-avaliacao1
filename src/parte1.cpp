@@ -12,11 +12,11 @@ struct Passageiro{
 };
 
 
-void IncluirPassageiro();
-void ExcluirPassageiro();
-void AlterarPassageiro();
-void ListarPassageiro();
-void LocalizarPassageiro();
+void IncluirPassageiro(vector<Passageiro> &passageiros);
+void ExcluirPassageiro(vector<Passageiro> &passageiros);
+void AlterarPassageiro(vector<Passageiro> &passageiros);
+void ListarPassageiro(vector<Passageiro> &passageiros);
+void LocalizarPassageiro(vector<Passageiro> &passageiros);
 
 int main(){
 
@@ -39,19 +39,19 @@ int main(){
                 cout << "Saindo..." << endl;
                 break;
             case 1:
-                IncluirPassageiro();
+                IncluirPassageiro(passageiros);
                 break;
             case 2:
-                ExcluirPassageiro();
+                ExcluirPassageiro(passageiros);
                 break;
             case 3:
-                AlterarPassageiro();
+                AlterarPassageiro(passageiros);
                 break;
             case 4:
-                ListarPassageiro();
+                ListarPassageiro(passageiros);
                 break;
             case 5:
-                LocalizarPassageiro();
+                LocalizarPassageiro(passageiros);
                 break;
             default:
                 cout << "Opcao invalida!" << endl;
@@ -61,3 +61,101 @@ int main(){
     return 0;
 }
 
+void IncluirPassageiro(vector<Passageiro> &passageiros){
+    Passageiro passageiro;
+    cout << "Digite o CPF: ";
+    cin >> passageiro.Cpf;
+    cout << "Digite o Nome: ";
+    cin >> passageiro.Nome;
+    cout << "Digite a Data de Nascimento: ";
+    cin >> passageiro.DtNascimento;
+    cout << "Digite o Numero de Autorizacao: ";
+    cin >> passageiro.NumAutorizacao;
+
+    passageiros.push_back(passageiro);
+}
+
+void ExcluirPassageiro(vector<Passageiro> &passageiros){
+    string cpf;
+    cout << "Digite o CPF: ";
+    cin >> cpf;
+
+    for(int i = 0; i < passageiros.size(); i++){
+        if(passageiros[i].Cpf == cpf){
+            passageiros.erase(passageiros.begin() + i);
+            cout << "Passageiro excluido com sucesso!" << endl;
+            return;
+        }
+    }
+    cout << "Passageiro nao encontrado!" << endl;
+}
+
+void AlterarPassageiro(vector<Passageiro> &passageiros){
+    string cpf;
+    char opcao;
+    cout << "Digite o CPF: ";
+    cin >> cpf;
+
+    for(int i = 0; i < passageiros.size(); i++){
+        if(passageiros[i].Cpf == cpf){
+            cout << "CPF: " << passageiros[i].Cpf << endl;
+            cout << "Nome: " << passageiros[i].Nome << endl;
+            cout << "Data de Nascimento: " << passageiros[i].DtNascimento << endl;
+            cout << "Numero de Autorizacao: " << passageiros[i].NumAutorizacao << endl;
+            cout << "-------------------------------------" << endl;
+            cout << "Deseja alterar o CPF? (S/N): ";
+            cin >> opcao;
+            if(opcao == 'S' || opcao == 's'){
+                cout << "Digite o CPF: ";
+                cin >> passageiros[i].Cpf;
+            }
+            cout << "Deseja alterar o Nome? (S/N): ";
+            cin >> opcao;
+            if(opcao == 'S' || opcao == 's'){
+                cout << "Digite o Nome: ";
+                cin >> passageiros[i].Nome;
+            }
+            cout << "Deseja alterar a Data de Nascimento? (S/N): ";
+            cin >> opcao;
+            if(opcao == 'S' || opcao == 's'){
+                cout << "Digite a Data de Nascimento: ";
+                cin >> passageiros[i].DtNascimento;
+            }
+            cout << "Deseja alterar o Numero de Autorizacao? (S/N): ";
+            cin >> opcao;
+            if(opcao == 'S' || opcao == 's'){
+                cout << "Digite o Numero de Autorizacao: ";
+                cin >> passageiros[i].NumAutorizacao;
+            }
+            cout << "Passageiro alterado com sucesso!" << endl;
+        }
+    }
+}
+
+void ListarPassageiro(vector<Passageiro> &passageiros){
+    for(int i = 0; i < passageiros.size(); i++){
+        cout << "CPF: " << passageiros[i].Cpf << endl;
+        cout << "Nome: " << passageiros[i].Nome << endl;
+        cout << "Data de Nascimento: " << passageiros[i].DtNascimento << endl;
+        cout << "Numero de Autorizacao: " << passageiros[i].NumAutorizacao << endl;
+        cout << "-------------------------------------" << endl;
+    }
+}
+
+void LocalizarPassageiro(vector<Passageiro> &passageiros){
+    string cpf;
+    cout << "Digite o CPF: ";
+    cin >> cpf;
+
+    for(int i = 0; i < passageiros.size(); i++){
+        if(passageiros[i].Cpf == cpf){
+            cout << "CPF: " << passageiros[i].Cpf << endl;
+            cout << "Nome: " << passageiros[i].Nome << endl;
+            cout << "Data de Nascimento: " << passageiros[i].DtNascimento << endl;
+            cout << "Numero de Autorizacao: " << passageiros[i].NumAutorizacao << endl;
+            cout << "-------------------------------------" << endl;
+            return;
+        }
+    }
+    cout << "Passageiro nao encontrado!" << endl;
+}
