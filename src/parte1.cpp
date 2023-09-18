@@ -39,9 +39,20 @@ int main(){
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
 
+    
 
 
     return 0;
+}
+
+
+void menuPassageiros(){
+    cout << "1 - Adicionar passageiro" << endl;
+    cout << "2 - Remover passageiro" << endl;
+    cout << "3 - Alterar passageiro" << endl;
+    cout << "4 - Listar passageiros" << endl;
+    cout << "5 - Voltar" << endl;
+    cout << "Digite a opcao desejada: ";
 }
 
 bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
@@ -93,6 +104,16 @@ void listPassageiros(vector<Passageiro> passageiros){
     cout << endl;
 }
 
+bool buscPassageiro(vector<Passageiro> passageiros, string CPF){
+    for (int i = 0; i < passageiros.size(); i++){
+        if (passageiros[i].CPF == CPF){
+            cout << "Nome: " << passageiros[i].nome << " | Data de nascimento: " << dataFormatada(passageiros[i].DtNascimento) << ((passageiros[i].NumAutorizacao != "")? "Numero de autorizacao" + passageiros[i].NumAutorizacao: "\n");
+            return true;
+        }
+    }
+    return false;
+}
+
 bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
     Data data;
     if(inicializaData(&data, diaNasc, mesNasc, anoNasc)){
@@ -104,10 +125,10 @@ bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, 
                 return true;
             }
         }
-        cout << "Passageiro nao encontrado" << endl;
+        cout << "Passageiro nao encontrado." << endl;
         return false;
     }
-    cout << "Data invalida" << endl;
+    cout << "Data invalida." << endl;
     return false;
 }
 
