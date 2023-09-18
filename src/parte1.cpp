@@ -70,6 +70,28 @@ bool deletePassageiro(vector<Passageiro> &passageiros, string CPF){
     return false;
 }
 
+string formatData(Data data){
+    string dataFormatada = "";
+
+    dataFormatada += data.dia;
+    dataFormatada += "/";
+    dataFormatada += data.mes;
+    dataFormatada += "/";
+    dataFormatada += data.ano;
+
+    return dataFormatada;
+}
+
+void listPassageiros(vector<Passageiro> passageiros){
+    cout << "CPF\t\tNome\t\tData de Nascimento\t\tNumero de Autorizacao" << endl;
+    for (int i = 0; i < passageiros.size(); i++){
+        cout << passageiros[i].CPF;
+        cout << " " << passageiros[i].nome;
+        cout << "  " << formatData(passageiros[i].DtNascimento);
+        cout << " " << passageiros[i].NumAutorizacao << endl;
+    }
+    cout << endl;
+}
 
 
 
