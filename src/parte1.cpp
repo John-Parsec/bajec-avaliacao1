@@ -44,6 +44,24 @@ int main(){
     return 0;
 }
 
+bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
+    Passageiro pas;
+
+    if(inicializaPassageiro(&pas, CPF, nome, diaNasc, mesNasc, anoNasc, NumAutorizacao)){
+        for (int i = 0; i < passageiros.size(); i++){
+            if (passageiros[i].CPF == pas.CPF){
+                return false;
+            }
+        }
+        passageiros.push_back(pas);
+        return true;
+    }
+    return false;
+}
+
+
+
+
 bool inicializaHora(Hora &hora, short int hora, short int minuto){
 
     if (validaHora(hora, minuto)){
@@ -113,6 +131,14 @@ bool validaHora(short int hora, short int minuto){
     return true;
 }
 
+bool validaDataHora(DataHora datahora){
+    if (validarData(datahora->data->dia, datahora->data->mes, datahora->data->ano) && validaHora(datahora->hora->hora, datahora->hora->minuto)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 bool validaDuracao(shor int hora, short int miuto){
     if (hora < 0 || minuto < 0 || minuto > 59){
         return false;
@@ -139,9 +165,7 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
 
 
 bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
-    DataHora datahora;
-    
-    if (&& validaDuracao(duracao->hora, duracao->minu)){
+    if (validaDataHora(DataHora datahora) && validaDuracao(duracaoHora, duracaoMin)){
         rot->codigo = codigo;
         rot->datahora = datahora;
         rot->duracao = duracao;
