@@ -38,13 +38,13 @@ struct Roteiro{
 bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao);
 bool deletePassageiro(vector<Passageiro> &passageiros, string CPF);
 bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao);
-bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao = "");
+bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao);
 bool inicializaData(Data &data, short int dia, short int mes, int ano);
 bool inicializaHora(Hora &Hora, short int hora, short int minuto);
 bool inicializaDataHora(DataHora &datahora, short int min, short int hora, short int dia, short int mes, int ano);
 bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
 bool validaDataHora(DataHora datahora);
-bool validaData(short int dia, short int mes, int ano);
+bool validarData(short int dia, short int mes, int ano);
 bool validaHora(short int hora, short int minuto);
 bool validaDuracao(short int hora, short int minuto);
 bool incializaDuracao(Hora &duracao, short int hora, short int minuto);
@@ -157,7 +157,7 @@ void menuPassageiros(vector<Passageiro> &passageiros){
 bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao){
     Passageiro pas;
 
-    if(inicializaPassageiro(&pas, CPF, nome, diaNasc, mesNasc, anoNasc, NumAutorizacao)){
+    if(inicializaPassageiro(pas, CPF, nome, diaNasc, mesNasc, anoNasc, NumAutorizacao)){
         for (int i = 0; i < passageiros.size(); i++){
             if (passageiros[i].CPF == pas.CPF){
                 return false;
@@ -206,7 +206,7 @@ void listPassageiros(vector<Passageiro> passageiros){
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF){
     for (int i = 0; i < passageiros.size(); i++){
         if (passageiros[i].CPF == CPF){
-            cout << "Nome: " << passageiros[i].nome << " | Data de nascimento: " << dataFormatada(passageiros[i].DtNascimento) << ((passageiros[i].NumAutorizacao != "")? "Numero de autorizacao" + passageiros[i].NumAutorizacao: "\n");
+            cout << "Nome: " << passageiros[i].nome << " | Data de nascimento: " << formatData(passageiros[i].DtNascimento) << ((passageiros[i].NumAutorizacao != "")? "Numero de autorizacao" + passageiros[i].NumAutorizacao: "\n");
             return true;
         }
     }
@@ -261,11 +261,11 @@ bool inicializaData(Data &data, short int dia, short int mes, int ano){
 
 bool inicializaDataHora(DataHora &datahora, short int min, short int hora, short int dia, short int mes, int ano){
     Data data;
-    Hora hora;
-    inicializaData(&data, dia, mes, ano);
-    inicializaHora(&hora, hora, min);
-    datahora->data = data;
-    datahora->hora = hora;
+    Hora horario;
+    inicializaData(data, dia, mes, ano);
+    inicializaHora(horario, hora, min);
+    datahora.data = data;
+    datahora.horario = horario;
     if (validarData(dia, mes, ano) && validaHora(hora, min))
         return true;
     else
@@ -303,7 +303,7 @@ bool validaHora(short int hora, short int minuto){
 }
 
 bool validaDataHora(DataHora datahora){
-    if (validarData(datahora.data.dia, datahora.data.mes, datahora.data.ano) && validaHora(datahora.hora.hora, datahora.hora.minuto)){
+    if (validarData(datahora.data.dia, datahora.data.mes, datahora.data.ano) && validaHora(datahora.horario.hora, datahora.horario.minuto)){
         return true;
     }else{
         return false;
@@ -331,7 +331,7 @@ bool incializaDuracao(Hora &duracao, short int hora, short int minuto){
 
 bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int dia, short int mes, int ano, string NumAutorizacao){
     Data DtNascimento;
-    if (inicializaData(&DtNascimento, dia, mes, ano)){
+    if (inicializaData(DtNascimento, dia, mes, ano)){
         pas.CPF = CPF;
         pas.nome = nome;
         pas.DtNascimento = DtNascimento;
