@@ -142,38 +142,25 @@ void IncluirPassageiro(vector<Passageiro> &passageiros){
 
     cout << "Digite o CPF: ";
     cin >> cpf;
-
-
-    if(passageiros.size() == 0){
-        passageiro.Cpf = cpf;
-        cout << "Digite o Nome: ";
-        cin >> passageiro.Nome;
-        cout << "Digite a Data de Nascimento: ";
-        cin >> passageiro.DtNascimento;
-        cout << "Digite o Numero de Autorizacao: ";
-        cin >> passageiro.NumAutorizacao;
-        passageiros.push_back(passageiro);
-        cout << "Passageiro incluido com sucesso!" << endl;
-        return;
-    }
-    else{
-        for(int i = 0; i < passageiros.size(); i++){
-            if(passageiros[i].Cpf == cpf){
-                cout << "Passageiro ja cadastrado!" << endl;
-                return;
-            }
-            passageiro.Cpf = cpf;
-            cout << "Digite o Nome: ";
-            cin >> passageiro.Nome;
-            cout << "Digite a Data de Nascimento: ";
-            cin >> passageiro.DtNascimento;
-            cout << "Digite o Numero de Autorizacao: ";
-            cin >> passageiro.NumAutorizacao;
-            passageiros.push_back(passageiro);
-            cout << "Passageiro incluido com sucesso!" << endl;
+    
+    for (int i = 0; i < passageiros.size(); i++) {
+        if (passageiros[i].Cpf == cpf) {
+            cout << "Passageiro já cadastrado!" << endl;
             return;
         }
     }
+
+    passageiro.Cpf = cpf;
+    cout << "Digite o Nome: ";
+    cin >> passageiro.Nome;
+    cout << "Digite a Data de Nascimento: ";
+    cin >> passageiro.DtNascimento;
+    cout << "Digite o Numero de Autorizacao: ";
+    cin >> passageiro.NumAutorizacao;
+    
+    passageiros.push_back(passageiro);
+    cout << "Passageiro incluído com sucesso!" << endl;
+
 }
 
 void ExcluirPassageiro(vector<Passageiro> &passageiros){
@@ -276,40 +263,25 @@ void IncluirRoteiro(vector<Roteiro> &roteiros){
     cout << "Digite o Codigo: ";
     cin >> codigo;
 
-    if(roteiros.size() == 0){
-        roteiro.Codigo = codigo;
-        cout << "Digite a Data e Hora: ";
-        cin >> roteiro.Data_hora;
-        cout << "Digite a Duracao: ";
-        cin >> roteiro.Duracao;
-        cout << "Digite a Origem: ";
-        cin >> roteiro.Origem;
-        cout << "Digite o Destino: ";
-        cin >> roteiro.Destino;
-        roteiros.push_back(roteiro);
-        cout << "Roteiro incluido com sucesso!" << endl;
-        return;
-    }
-    else{
-        for(int i = 0; i < roteiros.size(); i++){
-            if(roteiros[i].Codigo == codigo){
-                cout << "Roteiro ja cadastrado!" << endl;
-                return;
-            }
-            roteiro.Codigo = codigo;
-            cout << "Digite a Data e Hora: ";
-            cin >> roteiro.Data_hora;
-            cout << "Digite a Duracao: ";
-            cin >> roteiro.Duracao;
-            cout << "Digite a Origem: ";
-            cin >> roteiro.Origem;
-            cout << "Digite o Destino: ";
-            cin >> roteiro.Destino;
-            roteiros.push_back(roteiro);
-            cout << "Roteiro incluido com sucesso!" << endl;
+    for(int i = 0; i < roteiros.size(); i++){
+        if(roteiros[i].Codigo == codigo){
+            cout << "Roteiro ja cadastrado!" << endl;
             return;
         }
     }
+
+    roteiro.Codigo = codigo;
+    cout << "Digite a Data e Hora: ";
+    cin >> roteiro.Data_hora;
+    cout << "Digite a Duracao: ";
+    cin >> roteiro.Duracao;
+    cout << "Digite a Origem: ";
+    cin >> roteiro.Origem;
+    cout << "Digite o Destino: ";
+    cin >> roteiro.Destino;
+
+    roteiros.push_back(roteiro);
+    cout << "Roteiro incluido com sucesso!" << endl;
 }
 
 void ExcluirRoteiro(vector<Roteiro> &roteiros){
