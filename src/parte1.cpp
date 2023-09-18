@@ -93,7 +93,23 @@ void listPassageiros(vector<Passageiro> passageiros){
     cout << endl;
 }
 
-
+bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao = ""){
+    Data data;
+    if(inicializaData(&data, diaNasc, mesNasc, anoNasc)){
+        for (int i = 0; i < passageiros.size(); i++){
+            if (passageiros[i].CPF == CPF){
+                passageiros[i].nome = nome;
+                passageiros[i].DtNascimento = data;
+                passageiros[i].NumAutorizacao = NumAutorizacao;
+                return true;
+            }
+        }
+        cout << "Passageiro nao encontrado" << endl;
+        return false;
+    }
+    cout << "Data invalida" << endl;
+    return false;
+}
 
 
 bool inicializaHora(Hora &hora, short int hora, short int minuto){
