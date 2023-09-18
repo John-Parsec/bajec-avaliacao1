@@ -11,13 +11,59 @@ struct passageiro{
     string NumAutorizacao;
 };
 
-string randCPF()
+bool verificar_data(string data)
 {
-    string cpf;
-    for(int i = 0; i < 11; i++)
-        cpf += ((rand()%10) + 48);
+    std::string d, m, a, str;
+    int id, im, ia;
+    bool valido = 1;
 
-    return cpf;
+    str = data;
+
+    if(data.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        d = str.substr(0, 2);
+        m = str.substr(3, 2);
+        a = str.substr(6, 4);
+
+        id = stoi(d);
+        im = stoi(m);
+        ia = stoi(a);
+    }
+
+    if(im < 1 || im > 12 || id < 1 || id > 31)
+        valido = 0;
+
+    if(valido && (im == 4 || im == 6 || im == 9 || im == 11) && id > 30)
+        valido = 0;
+
+    if(valido && im == 2)
+    {
+        if (ia % 4 == 0 && id > 29)
+            valido = 0;
+        else if (ia % 4 !=0 && id > 28)
+            valido = 0;
+    }
+
+    if(valido && ia > 2023)
+        valido = 0;
+
+    return valido;
+}
+
+bool verificar_cpf(string cpf)
+{
+    bool valido = 1;
+    if(cpf.size() != 11) {valido = 0;}
+    for(int i = 0; i < 11 && valido; i++)
+    {
+        if(cpf[i] < 48 || cpf[i] > 57) {valido = 0;}
+    }
+
+    return valido;
 }
 
 void incluir_passageiro(vector<passageiro>& vec)
@@ -26,20 +72,36 @@ void incluir_passageiro(vector<passageiro>& vec)
     passageiro novo;
     std::cout << "Nome: ";
     std::getline(cin >> ws, novo.Nome);
-    std::cout << "CPF: ";
+    std::cout << "CPF (11 numeros): ";
     std::cin >> novo.CPF;
+    while(!verificar_cpf(novo.CPF))
+    {
+        std::cout << "CPF invalido, insira novamente (11 numeros): ";
+        std::cin >> novo.CPF;
+    }
+
     for(int i = 0; i < vec.size(); i++)
     {
         if(novo.CPF == vec[i].CPF)
         {
             std::cout << "Esse CPF já existe, por favor insira outro: ";
             std::cin >> novo.CPF;
+            while(!verificar_cpf(novo.CPF))
+            {
+                std::cout << "CPF invalido, insira novamente (11 numeros): ";
+                std::cin >> novo.CPF;
+            }
             i = -1;
         }
     }
 
     std::cout << "Data de nascimento (dd/mm/aaaa): ";
     std::cin >> novo.DtNascimento;
+    while(!verificar_data(novo.DtNascimento))
+    {
+        std::cout << "Data de nascimento invalida, insira novamente (dd/mm/aaaa): ";
+        std::cin >> novo.DtNascimento;
+    }
 
     string dataaux = novo.DtNascimento.substr(6, 4);
     if(stoi(dataaux) > 2005)
@@ -134,12 +196,22 @@ void alterar_passageiro(vector<passageiro>& vec)
             string cpf;
             std::cout << "CPF: ";
             std::cin >> cpf;
+            while(!verificar_cpf(cpf))
+            {
+                std::cout << "CPF invalido, insira novamente (11 numeros): ";
+                std::cin >> cpf;
+            }
             for(int i = 0; i < vec.size(); i++)
             {
                 if(cpf == vec[i].CPF && i!=index)
                 {
                     std::cout << "Esse CPF já existe, por favor insira outro: ";
                     std::cin >> cpf;
+                    while(!verificar_cpf(cpf))
+                    {
+                        std::cout << "CPF invalido, insira novamente (11 numeros): ";
+                        std::cin >> cpf;
+                    }
                     i = -1;
                 }
             } 
@@ -152,17 +224,22 @@ void alterar_passageiro(vector<passageiro>& vec)
         {
             std::cout << "Data de Nascimento: ";
             std::cin >> vec[index].DtNascimento;
+            while(!verificar_data(vec[index].DtNascimento))
+            {
+                std::cout << "Data de nascimento invalida, insira novamente (dd/mm/aaaa): ";
+                std::cin >> vec[index].DtNascimento;
+            }
         }
 
         string dataaux = vec[index].DtNascimento.substr(6, 4);
         if(stoi(dataaux) > 2005 && vec[index].NumAutorizacao != "")
         {
-            std::cout << "Deseja alterar a Data de Nascimento? (sim = 1 / nao = 0): ";
+            std::cout << "Deseja alterar o Numero de autorizacao? (sim = 1 / nao = 0): ";
             std::cin >> acao;
             if(acao)
             {
-                std::cout << "Data de Nascimento: ";
-                std::cin >> vec[index].DtNascimento;
+                std::cout << "Numero de autorizacao: ";
+                std::cin >> vec[index].NumAutorizacao;
             }
         }
         else if(stoi(dataaux) > 2005)

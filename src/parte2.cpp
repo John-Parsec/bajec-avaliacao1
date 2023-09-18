@@ -7,10 +7,93 @@ using namespace std;
 struct roteiro{
     string Codigo;
     string Duracao_Prevista;
-    string Data_Hora_prevista;
+    string Data;
+    string Hora;
     string Origem;
     string Destino;
 };
+
+bool verificar_data(string data)
+{
+    std::string d, m, a, str;
+    int id, im, ia;
+    bool valido = 1;
+
+    str = data;
+
+    if(data.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        d = str.substr(0, 2);
+        m = str.substr(3, 2);
+        a = str.substr(6, 4);
+
+        id = stoi(d);
+        im = stoi(m);
+        ia = stoi(a);
+    }
+
+    if(im < 1 || im > 12 || id < 1 || id > 31)
+        valido = 0;
+
+    if(valido && (im == 4 || im == 6 || im == 9 || im == 11) && id > 30)
+        valido = 0;
+
+    if(valido && im == 2)
+    {
+        if (ia % 4 == 0 && id > 29)
+            valido = 0;
+        else if (ia % 4 !=0 && id > 28)
+            valido = 0;
+    }
+
+    return valido;
+}
+
+bool verificar_hora(string hora)
+{
+    std::string hr, min, str;
+    int ihr, imin;
+    bool valido = 1;
+
+    str = hora;
+
+    if(str.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        hr = str.substr(0, 2);
+        min = str.substr(3, 2);
+
+        ihr = stoi(hr);
+        imin = stoi(min);
+    }
+
+    if(imin < 0 || imin > 59)
+        valido = 0;
+
+    if(ihr < 0 || ihr > 23)
+        valido = 0;
+
+    return valido;
+}
+
+bool verificar_codigo(string codigo)
+{
+    bool valido = 1;
+    if(codigo.size() != 11) {valido = 0;}
+    for(int i = 0; i < 11 && valido; i++)
+    {
+        if(codigo[i] < 48 || codigo[i] > 57) {valido = 0;}
+    }
+
+    return valido;
+}
 
 void incluir_roteiro(vector<roteiro>& vec)
 {
@@ -22,20 +105,43 @@ void incluir_roteiro(vector<roteiro>& vec)
     std::getline(cin >> ws, novo.Destino);
     std::cout << "Codigo: ";
     std::cin >> novo.Codigo;
+    while(!verificar_codigo(novo.Codigo))
+    {
+        std::cout << "Codigo invalido, insira novamente (11 numeros): ";
+        std::cin >> novo.Codigo;
+    }
     for(int i = 0; i < vec.size(); i++)
     {
         if(novo.Codigo == vec[i].Codigo)
         {
             std::cout << "Esse codigo já existe, por favor insira outro: ";
             std::cin >> novo.Codigo;
+            while(!verificar_codigo(novo.Codigo))
+            {
+                std::cout << "Codigo invalido, insira novamente (11 numeros): ";
+                std::cin >> novo.Codigo;
+            }
             i = -1;
         }
     }
 
-    std::cout << "Data/hora prevista: ";
-    std::cin >> novo.Data_Hora_prevista;
+    std::cout << "Data: ";
+    std::cin >> novo.Data;
+    while(!verificar_data(novo.Data))
+            {
+                std::cout << "Data invalida, insira novamente (dd/mm/aaaa): ";
+                std::cin >> novo.Data;
+            }
 
-    std::cout << "Numero de autorizacao: ";
+    std::cout << "Hora: ";
+    std::cin >> novo.Hora;
+    while(!verificar_hora(novo.Hora))
+            {
+                std::cout << "Hora invalida, insira novamente (hh:mm): ";
+                std::cin >> novo.Data;
+            }
+            
+    std::cout << "Duracao prevista: ";
     std::cin >> novo.Duracao_Prevista;
 
     vec.push_back(novo);
@@ -92,7 +198,8 @@ void alterar_roteiro(vector<roteiro>& vec)
         {
             std::cout << "Origem: " << vec[i].Origem << endl;
             std::cout << "Destino: " << vec[i].Destino << endl;
-            std::cout << "Data/hora prevista: " << vec[i].Data_Hora_prevista << endl;
+            std::cout << "Data prevista: " << vec[i].Data << endl;
+            std::cout << "Hora prevista: " << vec[i].Hora << endl;
             std::cout << "Duracao prevista: " << vec[i].Duracao_Prevista << endl;
 
             index = i;
@@ -127,24 +234,52 @@ void alterar_roteiro(vector<roteiro>& vec)
             string Codigo;
             std::cout << "Codigo: ";
             std::cin >> Codigo;
+            while(!verificar_codigo(Codigo))
+            {
+                std::cout << "Codigo invalido, insira novamente (11 numeros): ";
+                std::cin >> Codigo;
+            }
             for(int i = 0; i < vec.size(); i++)
             {
                 if(Codigo == vec[i].Codigo && i!=index)
                 {
                     std::cout << "Esse Codigo já existe, por favor insira outro: ";
                     std::cin >> Codigo;
+                    while(!verificar_codigo(Codigo))
+                    {
+                        std::cout << "Codigo invalido, insira novamente (11 numeros): ";
+                        std::cin >> Codigo;
+                    }
                     i = -1;
                 }
             } 
             vec[index].Codigo = Codigo;
         }
 
-        std::cout << "Deseja alterar a Data/hora prevista? (sim = 1 / nao = 0): ";
+        std::cout << "Deseja alterar a Data prevista? (sim = 1 / nao = 0): ";
         std::cin >> acao;
         if(acao)
         {
-            std::cout << "Data/hora prevista: ";
-            std::cin >> vec[index].Data_Hora_prevista;
+            std::cout << "Data: ";
+            std::cin >> vec[index].Data;
+            while(!verificar_data(vec[index].Data))
+            {
+                std::cout << "Data invalida, insira novamente (dd/mm/aaaa): ";
+                std::cin >> vec[index].Data;
+            }
+        }
+
+        std::cout << "Deseja alterar a Hora prevista? (sim = 1 / nao = 0): ";
+        std::cin >> acao;
+        if(acao)
+        {
+            std::cout << "Hora: ";
+            std::cin >> vec[index].Hora;
+            while(!verificar_hora(vec[index].Hora))
+            {
+                std::cout << "Hora invalida, insira novamente (hh:mm): ";
+                std::cin >> vec[index].Data;
+            }            
         }
 
         std::cout << "Deseja alterar a Duracao prevista? (sim = 1 / nao = 0): ";
@@ -175,7 +310,8 @@ void listar_roteiro(vector<roteiro>& vec)
         std::cout << "Codigo: " << vec[i].Codigo << endl;
         std::cout << "Origem: " << vec[i].Origem << endl;
         std::cout << "Destino: " << vec[i].Destino << endl;
-        std::cout << "Data/Hora prevista: " << vec[i].Data_Hora_prevista << endl;
+        std::cout << "Data: " << vec[i].Data << endl;
+        std::cout << "Hora: " << vec[i].Hora << endl;
         std::cout << "Duracao prevista: " << vec[i].Duracao_Prevista << endl;
         std::cout << "-------------------------" << endl << endl;
     }
@@ -196,7 +332,8 @@ void localizar_roteiro(vector<roteiro>& vec)
         {
             std::cout << "Origem: " << vec[i].Origem << endl;
             std::cout << "Destino: " << vec[i].Origem << endl;
-            std::cout << "Data/hora prevista: " << vec[i].Data_Hora_prevista << endl;
+            std::cout << "Data prevista: " << vec[i].Data << endl;
+            std::cout << "Hora prevista: " << vec[i].Hora << endl;
             std::cout << "Duracao prevista: " << vec[i].Duracao_Prevista << endl;
 
             i += vec.size();
