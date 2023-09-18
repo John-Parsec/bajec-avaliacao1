@@ -38,6 +38,47 @@ int main(){
     return 0;
 }
 
+bool inicializaHora(Hora &hora, short int hora, short int minuto){
+
+    if (validaHora(hora, minuto)){
+        hora->hora = hora;
+        hora->minuto = minuto;
+        return true;
+    }else{
+        hora->hora = 0;
+        hora->minuto = 0;
+        return false;
+    }
+}
+
+bool inicializaData(Data &data, short int dia, short int mes, short int ano){
+    if (validarData(dia, mes, ano)){
+        data->dia = dia;
+        data->mes = mes;
+        data->ano = ano;
+        return true;
+    }else{
+        data->dia = 0;
+        data->mes = 0;
+        data->ano = 0;
+        return false;
+    }
+}
+
+bool inicializaDataHora(DataHora &datahora, Data data, Hora hora){
+    if (validarData(data->dia, data->mes, data->ano) && validaHora(hora->hora, hora->minuto)){
+        datahora->data = data;
+        datahora->hora = hora;
+        return true;
+    }else{
+        datahora->data = 0;
+        datahora->hora = 0;
+        return false;
+    }
+}
+
+
+
 bool validarData(short int dia, short int mes, short int ano){
     if (ano < 0 || mes < 1 || mes > 12 || dia <1){
         return false;
