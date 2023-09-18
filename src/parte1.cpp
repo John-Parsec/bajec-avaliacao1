@@ -5,9 +5,9 @@ using namespace std;
 
 struct passageiro{
     string nome;
-    string cpf;
+    char cpf[12];
     string dataNascimento;
-    string numAutorizacao;
+    int numAutorizacao;
 };
 
 struct roteiro{
@@ -15,8 +15,11 @@ struct roteiro{
     string destino;
     string codigo;
     string data_horaPrevista;
-    string duracao;
+    float duracao;
 };
+
+bool validaData(string data);
+bool validaHora(string data_hora);
 
 void gerirPassageiros(vector<passageiro> &passageiros);
 void incluirPassageiro(vector<passageiro> &passageiros);
@@ -59,6 +62,64 @@ int main(void){
     }while(opt!=0);
 
     return 0;
+}
+
+bool validaData(string data){
+    int dia, mes, ano;
+
+    dia = stoi(data.substr(0, 2));
+    mes = stoi(data.substr(3, 2));
+    ano = stoi(data.substr(6, 4));
+
+    if(dia < 1 || dia > 31){
+        return false;
+    }
+    else if(mes == 4 || mes == 6 || mes == 9 || mes == 11){
+        if(dia > 30){
+            return false;
+        }
+    }
+    else if(mes < 1 || mes > 12){
+        return false;
+    }
+    else if(ano < 1900 || ano > 2040){
+        return false;
+    }
+    else if(mes == 2){
+        if(dia > 29){
+            return false;
+        }
+        else if(dia == 29){
+            if(ano % 4 != 0){
+                return false;
+            }
+            else if(ano % 100 == 0 && ano % 400 != 0){
+                return false;
+            }
+        }
+    }
+
+    return true;
+    
+}
+
+bool validaHora(string data_hora){
+    int hora, minuto;
+
+    hora = stoi(data_hora.substr(11, 2));
+    minuto = stoi(data_hora.substr(14, 2));
+
+    cout << hora << " " << minuto << endl;
+
+    if(hora < 0 || hora > 23){
+        return false;
+    }
+    else if(minuto < 0 || minuto > 59){
+        return false;
+    }
+    else{
+        return true;
+    }
 }
 
 void gerirPassageiros(vector<passageiro> &passageiros){
@@ -112,8 +173,14 @@ void incluirPassageiro(vector<passageiro> &passageiros){
     cin >> p.nome;
     cout << "CPF: ";
     cin >> p.cpf;
-    cout << "Data de nascimento: ";
+    cout << "Data de nascimento (dd/mm/aaaa): ";
     cin >> p.dataNascimento;
+    
+    if(!validaData(p.dataNascimento)){
+        cout << "Data inválida!" << endl;
+        return;
+    }
+
     cout << "Idade: ";
     cin >> idade;
 
@@ -288,12 +355,20 @@ void incluirRoteiro(vector<roteiro> &roteiros){
     cin >> r.destino;
     cout << "Código: ";
     cin >> r.codigo;
-    cout << "Data e hora prevista: ";
+    cout << "Data e hora prevista (dd/mm/aaaa hh:mm): ";
     cin >> r.data_horaPrevista;
+    if(!validaData(r.data_horaPrevista)){
+        cout << "Data inválida!" << endl;
+        return;
+    }
     cout << "Duração: ";
     cin >> r.duracao;
 
-    roteiros.push_back(r);
+    roteiros.push
+    if(!validaHora(r.data_horaPrevista)){
+        cout << "Hora inválida!" << endl;
+        return;
+    }_back(r);
 }
 
 void excluirRoteiro(vector<roteiro> &roteiros){
