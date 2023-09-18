@@ -183,11 +183,11 @@ bool deletePassageiro(vector<Passageiro> &passageiros, string CPF){
 string formatData(Data data){
     string dataFormatada = "";
 
-    dataFormatada += data.dia;
+    dataFormatada += to_string(data.dia);
     dataFormatada += "/";
-    dataFormatada += data.mes;
+    dataFormatada += to_string(data.mes);
     dataFormatada += "/";
-    dataFormatada += data.ano;
+    dataFormatada += to_string(data.ano);
 
     return dataFormatada;
 }
