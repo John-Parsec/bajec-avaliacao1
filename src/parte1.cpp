@@ -3,10 +3,26 @@
 
 using namespace std;
 
+struct date{
+    int dia;
+    int mes;
+    int ano;
+};
+
+struct hora{
+    int hora;
+    int minuto;
+};
+
+struct data_hora{
+    date d;
+    hora h;
+};
+
 struct passageiro{
     string nome;
     char cpf[12];
-    string dataNascimento;
+    date dataNascimento;
     int numAutorizacao;
 };
 
@@ -14,12 +30,21 @@ struct roteiro{
     string origem;
     string destino;
     string codigo;
-    string data_horaPrevista;
+    data_hora data_horaPrevista;
     float duracao;
 };
 
 bool validaData(string data);
 bool validaHora(string data_hora);
+bool validaDataHora(string data_hora);
+bool validaCPF(string cpf);
+date stringToDate(string str);
+hora stringToHora(string str);
+string dateToString(date d);
+string horaToString(hora h);
+string dataHoraToString(data_hora dh);
+data_hora stringToDataHora(string str);
+string cpfNum(string cpf);
 
 void gerirPassageiros(vector<passageiro> &passageiros);
 void incluirPassageiro(vector<passageiro> &passageiros);
@@ -64,12 +89,12 @@ int main(void){
     return 0;
 }
 
-bool validaData(string data){
+bool validaData(date data){
     int dia, mes, ano;
 
-    dia = stoi(data.substr(0, 2));
-    mes = stoi(data.substr(3, 2));
-    ano = stoi(data.substr(6, 4));
+    dia = data.dia;
+    mes = data.mes;
+    ano = data.ano;
 
     if(dia < 1 || dia > 31){
         return false;
@@ -100,16 +125,14 @@ bool validaData(string data){
     }
 
     return true;
-    
 }
 
-bool validaHora(string data_hora){
+
+bool validaHora(hora h){
     int hora, minuto;
 
-    hora = stoi(data_hora.substr(11, 2));
-    minuto = stoi(data_hora.substr(14, 2));
-
-    cout << hora << " " << minuto << endl;
+    hora = h.hora;
+    minuto = h.minuto;
 
     if(hora < 0 || hora > 23){
         return false;
@@ -120,6 +143,176 @@ bool validaHora(string data_hora){
     else{
         return true;
     }
+}
+
+bool validaDataHora(data_hora dh){
+    date d;
+    hora h;
+
+    d = dh.d;
+    h = dh.h;
+
+    if(!validaData(d)){
+        return false;
+    }
+    else if(!validaHora(h)){
+        return false;
+    }
+
+    return true;
+}
+
+date stringToDate(string str){
+    date d;
+    string aux;
+    int i = 0, j = 1;
+
+    for(i = 0; i < str.length(); i++){
+        aux += str[i];
+
+        if(str[i] == '/'){
+            if(j == 1){
+                d.dia = stoi(aux);
+                j++;
+            }
+            else{
+                d.mes = stoi(aux);
+            }
+            aux = "";
+        }
+
+    }
+
+    d.ano = stoi(aux);
+
+    return d;
+}
+
+hora stringToHora(string str){
+    hora h;
+    string aux;
+    int i;
+
+    for(i = 0; i < str.length(); i++){
+        aux += str[i];
+
+        if(str[i] == ':'){
+            h.hora = stoi(aux);
+            aux = "";
+        }
+    }
+
+    h.minuto = stoi(aux);
+
+    return h;
+}
+
+string dateToString(date d){
+    string str;
+
+    str = to_string(d.dia) + "/" + to_string(d.mes) + "/" + to_string(d.ano);
+
+    return str;
+}
+
+
+string horaToString(hora h){
+    string str;
+
+    str = to_string(h.hora) + ":" + to_string(h.minuto);
+
+    return str;
+}
+
+data_hora stringToDataHora(string str){
+    data_hora dh;
+    string aux;
+    int i;
+
+    for(i = 0; i < str.length(); i++){
+        aux += str[i];
+
+        if(str[i] == ' '){
+            dh.d = stringToDate(aux);
+            aux = "";
+        }
+    }
+            
+    dh.h = stringToHora(aux);
+    aux = "";
+
+    return dh;
+}
+
+string dataHoraToString(data_hora dh){
+    string str;
+
+    str = dateToString(dh.d) + " " + horaToString(dh.h);
+
+    return str;
+}
+
+string cpfNum(string cpf){
+    string numCPF;
+
+    for(int i = 0 ; i < cpf.length(); i++){
+        if(cpf[i] != '.' && cpf[i] != '-'){
+            numCPF += cpf[i];
+        }
+    }
+
+    return numCPF;
+}
+
+bool validaCPF(string cpf){
+    int i, j, k, soma = 0, digito1, digito2;
+    int cpfInt[11];
+    string cpfNumStr; 
+
+    cpfNumStr = cpfNum(cpf);
+
+    for(i = 0; i < 11; i++){
+        cpfInt[i] = cpfNumStr[i] - '0';
+    }
+
+    for(i = 0, j = 10; i < 9; i++, j--){
+        soma += cpfInt[i] * j;
+    }
+
+    digito1 = 11 - (soma % 11);
+
+    if(digito1 > 9){
+        digito1 = 0;
+    }
+
+    soma = 0;
+
+    for(i = 0, j = 11; i < 10; i++, j--){
+        soma += cpfInt[i] * j;
+    }
+
+    digito2 = 11 - (soma % 11);
+
+    if(digito2 > 9){
+        digito2 = 0;
+    }
+
+    if(digito1 == cpfInt[9] && digito2 == cpfInt[10]){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool cpfIsUnique(vector<passageiro> &passageiros, string cpf){
+    for(auto it = passageiros.begin(); it != passageiros.end(); it++){
+        if(it->cpf == cpf){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void gerirPassageiros(vector<passageiro> &passageiros){
@@ -168,14 +361,27 @@ void gerirPassageiros(vector<passageiro> &passageiros){
 void incluirPassageiro(vector<passageiro> &passageiros){
     passageiro p;
     int idade;
-
+    string dataNascimento;
     cout << "Nome: ";
     cin >> p.nome;
     cout << "CPF: ";
     cin >> p.cpf;
+
+    if(!validaCPF(p.cpf)){
+        cout << "CPF inválido!" << endl;
+        return;
+    }
+
+    if(!cpfIsUnique(passageiros, p.cpf)){
+        cout << "CPF já cadastrado!" << endl;
+        return;
+    }
+
     cout << "Data de nascimento (dd/mm/aaaa): ";
-    cin >> p.dataNascimento;
-    
+    cin >> dataNascimento;
+
+    p.dataNascimento = stringToDate(dataNascimento);
+
     if(!validaData(p.dataNascimento)){
         cout << "Data inválida!" << endl;
         return;
@@ -187,6 +393,9 @@ void incluirPassageiro(vector<passageiro> &passageiros){
     if(idade < 18){
         cout << "Número de autorização: ";
         cin >> p.numAutorizacao;
+    }
+    else{
+        p.numAutorizacao = 0;
     }
 
     passageiros.push_back(p);
@@ -220,6 +429,7 @@ void alterarPassageiro(vector<passageiro> &passageiros){
     bool achou = false;
     char opt;
     string cpf;
+    string dataNascimento;
     cout << "CPF: ";
     cin >> cpf;
 
@@ -243,7 +453,8 @@ void alterarPassageiro(vector<passageiro> &passageiros){
             cin >> opt;
             if(opt == 's'){
                 cout << "Data de nascimento: ";
-                cin >> it->dataNascimento;
+                cin >> dataNascimento;
+                it->dataNascimento = stringToDate(dataNascimento);
             }
             
             cout << "Deseja alterar o número de autorização? (s/n): ";
@@ -274,7 +485,7 @@ void listarPassageiros(vector<passageiro> &passageiros){
     for(auto it = passageiros.begin(); it != passageiros.end(); it++){
         cout << "Nome: " << it->nome << endl;
         cout << "CPF: " << it->cpf << endl;
-        cout << "Data de nascimento: " << it->dataNascimento << endl;
+        cout << "Data de nascimento: " << dateToString(it->dataNascimento) << endl;
         cout << "Número de autorização: " << it->numAutorizacao << endl;
     }
 
@@ -291,7 +502,7 @@ void localizarPassageiro(vector<passageiro> &passageiros){
         if(it->cpf == cpf){
             cout << "Nome: " << it->nome << endl;
             cout << "CPF: " << it->cpf << endl;
-            cout << "Data de nascimento: " << it->dataNascimento << endl;
+            cout << "Data de nascimento: " << dateToString(it->dataNascimento) << endl;
             cout << "Número de autorização: " << it->numAutorizacao << endl;
             achou = true;
             break;
@@ -348,6 +559,7 @@ void gerirRoteiros(vector<roteiro> &roteiros){
 
 void incluirRoteiro(vector<roteiro> &roteiros){
     roteiro r;
+    string data_hora;
 
     cout << "Origem: ";
     cin >> r.origem;
@@ -356,11 +568,15 @@ void incluirRoteiro(vector<roteiro> &roteiros){
     cout << "Código: ";
     cin >> r.codigo;
     cout << "Data e hora prevista (dd/mm/aaaa hh:mm): ";
-    cin >> r.data_horaPrevista;
-    if(!validaData(r.data_horaPrevista)){
+    cin >> data_hora;
+
+    r.data_horaPrevista = stringToDataHora(data_hora);
+
+    if(!validaDataHora(r.data_horaPrevista)){
         cout << "Data inválida!" << endl;
         return;
     }
+
     cout << "Duração: ";
     cin >> r.duracao;
 
@@ -395,6 +611,7 @@ void alterarRoteiro(vector<roteiro> &roteiros){
     bool achou = false;
     char opt;
     string codigo;
+    string data_hora;
     cout << "Código: ";
     cin >> codigo;
 
@@ -425,7 +642,8 @@ void alterarRoteiro(vector<roteiro> &roteiros){
             cin >> opt;
             if(opt == 's'){
                 cout << "Data e hora prevista: ";
-                cin >> it->data_horaPrevista;
+                cin >> data_hora;
+                it->data_horaPrevista = stringToDataHora(data_hora);
             }
             
             cout << "Deseja alterar a duração? (s/n): ";
@@ -457,7 +675,7 @@ void listarRoteiros(vector<roteiro> &roteiros){
         cout << "Origem: " << it->origem << endl;
         cout << "Destino: " << it->destino << endl;
         cout << "Código: " << it->codigo << endl;
-        cout << "Data e hora prevista: " << it->data_horaPrevista << endl;
+        cout << "Data e hora prevista: " << dataHoraToString(it->data_horaPrevista) << endl;
         cout << "Duração: " << it->duracao << endl;
     }
 
@@ -475,7 +693,7 @@ void localizarRoteiro(vector<roteiro> &roteiros){
             cout << "Origem: " << it->origem << endl;
             cout << "Destino: " << it->destino << endl;
             cout << "Código: " << it->codigo << endl;
-            cout << "Data e hora prevista: " << it->data_horaPrevista << endl;
+            cout << "Data e hora prevista: " << dataHoraToString(it->data_horaPrevista) << endl;
             cout << "Duração: " << it->duracao << endl;
             achou = true;
             break;
