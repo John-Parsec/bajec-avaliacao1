@@ -51,6 +51,7 @@ bool incializaDuracao(Hora &duracao, short int hora, short int minuto);
 void menuPassageiros(vector<Passageiro> &passageiros);
 void listPassageiros(vector<Passageiro> passageiros);
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF);
+Passageiro returnPassasgeiro(vector<Passageiro> passageiros, string CPF);
 string formatData(Data data);
 
 bool addRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
@@ -58,6 +59,7 @@ bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo);
 bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 void listRoteiros(vector<Roteiro> roteiros);
 bool buscRoteiro(vector<Roteiro> roteiros, string codigo);
+Roteiro returnRoteiro(vector<Roteiro> roteiros, string codigo);
 void menuRoteiro(vector<Roteiro> &roteiros);
 
 bool validarInputData(string data);
@@ -72,6 +74,7 @@ int main(){
     vector<Roteiro> roteiros;
 
     menuPassageiros(passageiros);
+    menuRoteiro(roteiros);
 
 
     return 0;
@@ -82,6 +85,8 @@ void menuPassageiros(vector<Passageiro> &passageiros){
     int opc, ano;
     string CPF, nome, NumAutorizacao, data;
     short int dia, mes;
+    char ch;
+    Passageiro pas;
 
     do{
         cout << "1 - Adicionar passageiro" << endl;
@@ -133,16 +138,39 @@ void menuPassageiros(vector<Passageiro> &passageiros){
                 cin >> CPF;
                 CPFtoNum(CPF);
                 if(buscPassageiro(passageiros, CPF)){
-                    cout << "Novo nome: ";
-                    cin >> nome;
-                    cout << "Novo dia de nascimento: ";
-                    cin >> dia;
-                    cout << "Novo mes de nascimento: ";
-                    cin >> mes;
-                    cout << "Novo ano de nascimento : ";
-                    cin >> ano;
-                    cout << "Novo numero de autorizacao : ";
-                    cin >> NumAutorizacao;
+                    pas = returnPassasgeiro(passageiros, CPF);
+                    cout << "Deseja alterar nome? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Novo nome: ";
+                        cin >> nome;
+                    }else{
+                        nome = pas.nome;
+                    }
+                    cout << "Deseja alterar data de nascimento? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        do{
+                            cout << "Nova data de nascimento (DD/MM/AAAA): ";
+                            cin >> data;
+                        }while(!validarInputData(data));
+                        dataToNum(data, dia, mes, ano);
+                    }else{
+                        dia = pas.DtNascimento.dia;
+                        mes = pas.DtNascimento.mes;
+                        ano = pas.DtNascimento.ano;
+                    }
+                    cout << "Deseja alterar numero de autorizacao? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Novo numero de autorizacao: ";
+                        cin >> NumAutorizacao;
+                    }else{ 
+                        NumAutorizacao = pas.NumAutorizacao;
+                    }
                     if (alteraPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao))
                         cout << "Passageiro alterado com sucesso.\n\n";
                     else
@@ -234,6 +262,14 @@ bool buscPassageiro(vector<Passageiro> passageiros, string CPF){
         }
     }
     return false;
+}
+
+Passageiro returnPassasgeiro(vector<Passageiro> passageiros, string CPF){
+    for (int i = 0; i < passageiros.size(); i++){
+        if (passageiros[i].CPF == CPF){
+            return passageiros[i];
+        }
+    }
 }
 
 bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, short int diaNasc, short int mesNasc, int anoNasc, string NumAutorizacao){
@@ -413,6 +449,9 @@ void menuRoteiro(vector<Roteiro> &roteiros){
     string codigo, origem, destino, data;
     short int dia, mes, duracaoHora, duracaoMin, hora, min;
     DataHora datahora;
+    Roteiro rot;
+    char ch;
+
     do{
         cout << "1 - Adicionar roteiro" << endl;
         cout << "2 - Remover roteiro" << endl;
@@ -463,24 +502,63 @@ void menuRoteiro(vector<Roteiro> &roteiros){
                 cout << "Digite o codigo do roteiro: ";
                 cin >> codigo;
                 if(buscRoteiro(roteiros, codigo)){
-                    cout << "Novo dia: ";
-                    cin >> dia;
-                    cout << "Novo mes: ";
-                    cin >> mes;
-                    cout << "Novo ano: ";
-                    cin >> ano;
-                    cout << "Nova hora: ";
-                    cin >> hora;
-                    cout << "Novo minuto: ";
-                    cin >> min;
-                    cout << "Nova duracao (horas): ";
-                    cin >> duracaoHora;
-                    cout << "Nova duracao (minutos): ";
-                    cin >> duracaoMin;
-                    cout << "Nova origem: ";
-                    cin >> origem;
-                    cout << "Novo destino: ";
-                    cin >> destino;
+                    rot = returnRoteiro(roteiros, codigo);
+                    cout << "Deseja alterar data? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        do{
+                            cout << "Nova data (DD/MM/AAAA): ";
+                            cin >> data;
+                        }while(!validarInputData(data));
+                        dataToNum(data, dia, mes, ano);
+                    }else{
+                        dia = rot.datahora.data.dia;
+                        mes = rot.datahora.data.mes;
+                        ano = rot.datahora.data.ano;
+                    }
+                    cout << "Deseja alterar hora? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Nova hora: ";
+                        cin >> hora;
+                        cout << "Novo minuto: ";
+                        cin >> min;
+                    }else{
+                        hora = rot.datahora.horario.hora;
+                        min = rot.datahora.horario.minuto;
+                    }
+                    cout << "Deseja alterar duracao? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Nova duracao (horas): ";
+                        cin >> duracaoHora;
+                        cout << "Nova duracao (minutos): ";
+                        cin >> duracaoMin;
+                    }else{
+                        duracaoHora = rot.duracao.hora;
+                        duracaoMin = rot.duracao.minuto;
+                    }
+                    cout << "Deseja alterar origem? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Nova origem: ";
+                        cin >> origem;
+                    }else{
+                        origem = rot.origem;
+                    }
+                    cout << "Deseja alterar destino? (S/N): ";
+                    cin >> ch;
+                    ch = tolower(ch);
+                    if(ch == 's'){
+                        cout << "Novo destino: ";
+                        cin >> destino;
+                    }else{
+                        destino = rot.destino;
+                    }
                     if(alteraRoteiro(roteiros, codigo, min, hora, dia, mes, ano, duracaoHora, duracaoMin, origem, destino))
                         cout << "Roteiro alterado com sucesso." << endl;
                     else
@@ -594,6 +672,14 @@ bool buscRoteiro(vector<Roteiro> roteiros, string codigo){
         }
     }
     return false;
+}
+
+Roteiro returnRoteiro(vector<Roteiro> roteiros, string codigo){
+    for (int i = 0; i < roteiros.size(); i++){
+        if (roteiros[i].codigo == codigo){
+            return roteiros[i];
+        }
+    }
 }
 
 bool validaCPF(string CPF){
