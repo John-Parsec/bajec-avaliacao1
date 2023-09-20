@@ -63,6 +63,9 @@ void menuRoteiro(vector<Roteiro> &roteiros);
 bool validarInputData(string data);
 void dataToNum(string data, short int &dia, short int &mes, int &ano);
 
+bool validaCPF(string CPF);
+void CPFtoNum(string &CPF);
+string formatCPF(string CPF);
 
 int main(){
     vector<Passageiro> passageiros;
@@ -92,8 +95,13 @@ void menuPassageiros(vector<Passageiro> &passageiros){
 
         switch (opc){
             case 1:
-                cout << "CPF: ";
-                cin >> CPF;
+                do{
+                    cout << "CPF: ";
+                    cin >> CPF;
+                    if(!validaCPF(CPF))
+                        cout << "CPF invalido.\n";
+                }while(!validaCPF(CPF));
+                CPFtoNum(CPF);
                 cout << "Nome: ";
                 cin >> nome;
 
@@ -114,6 +122,7 @@ void menuPassageiros(vector<Passageiro> &passageiros){
             case 2:
                 cout << "Digite o CPF do passageiro: ";
                 cin >> CPF;
+                CPFtoNum(CPF);
                 if (deletePassageiro(passageiros, CPF))
                     cout << "Passageiro removido com sucesso.\n\n";
                 else
@@ -122,6 +131,7 @@ void menuPassageiros(vector<Passageiro> &passageiros){
             case 3:
                 cout << "Digite o CPF do passageiro: ";
                 cin >> CPF;
+                CPFtoNum(CPF);
                 if(buscPassageiro(passageiros, CPF)){
                     cout << "Novo nome: ";
                     cin >> nome;
@@ -146,6 +156,7 @@ void menuPassageiros(vector<Passageiro> &passageiros){
             case 5:
                 cout << "Digite o CPF do passageiro: ";
                 cin >> CPF;
+                CPFtoNum(CPF);
                 cout << ((buscPassageiro(passageiros, CPF))? "\n\n": "Passageiro nao encontrado.\n\n");
                 break;
             case 6:
@@ -205,7 +216,7 @@ string formatData(Data data){
 void listPassageiros(vector<Passageiro> passageiros){
     cout << "CPF\t\tNome\t\tData de Nascimento\tNumero de Autorizacao\n";
     for (int i = 0; i < passageiros.size(); i++){
-        cout << passageiros[i].CPF;
+        cout << formatCPF(passageiros[i].CPF);
         cout << "\t" << passageiros[i].nome;
         cout << "\t" << formatData(passageiros[i].DtNascimento);
         cout << "\t" << passageiros[i].NumAutorizacao << endl;
@@ -236,7 +247,6 @@ bool alteraPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, 
                 return true;
             }
         }
-        cout << "Passageiro nao encontrado." << endl;
         return false;
     }
     cout << "Data invalida." << endl;
@@ -586,5 +596,42 @@ bool buscRoteiro(vector<Roteiro> roteiros, string codigo){
     return false;
 }
 
+bool validaCPF(string CPF){
+    string numCPF = "";
+
+    for(char ch : CPF){
+        if(isdigit(ch))
+            numCPF += ch;
+    }
+
+    if(numCPF.size() != 11)
+        return false;
+    else
+        return true;
+}
 
 
+void CPFtoNum(string &CPF){
+    string numCPF = "";
+
+    for(char ch : CPF){
+        if(isdigit(ch))
+            numCPF += ch;
+    }
+
+    CPF = numCPF;
+}
+
+string formatCPF(string CPF){
+    string CPFFormatado = "";
+
+    CPFFormatado += CPF.substr(0,3);
+    CPFFormatado += ".";
+    CPFFormatado += CPF.substr(3,3);
+    CPFFormatado += ".";
+    CPFFormatado += CPF.substr(6,3);
+    CPFFormatado += "-";
+    CPFFormatado += CPF.substr(9);
+
+    return CPFFormatado;
+}
