@@ -21,6 +21,79 @@ typedef struct Roteiro {
 
 } Roteiro;
 
+bool verificar_data(string data)
+{
+    std::string d, m, a, str;
+    int id, im, ia;
+    bool valido = 1;
+
+    str = data;
+
+    if(data.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        d = str.substr(0, 2);
+        m = str.substr(3, 2);
+        a = str.substr(6, 4);
+
+        id = stoi(d);
+        im = stoi(m);
+        ia = stoi(a);
+    }
+
+    if(im < 1 || im > 12 || id < 1 || id > 31)
+        valido = 0;
+
+    if(valido && (im == 4 || im == 6 || im == 9 || im == 11) && id > 30)
+        valido = 0;
+
+    if(valido && im == 2)
+    {
+        if (ia % 4 == 0 && id > 29)
+            valido = 0;
+        else if (ia % 4 !=0 && id > 28)
+            valido = 0;
+    }
+
+    if(valido && ia > 2023)
+        valido = 0;
+
+    return valido;
+}
+
+bool verificar_hora(string hora)
+{
+    std::string hr, min, str;
+    int ihr, imin;
+    bool valido = 1;
+
+    str = hora;
+
+    if(str.size() != 5)
+    {
+        valido = 0;
+    }
+    else
+    {
+        hr = str.substr(0, 2);
+        min = str.substr(3, 2);
+
+        ihr = stoi(hr);
+        imin = stoi(min);
+    }
+
+    if(imin < 0 || imin > 59)
+        valido = 0;
+
+    if(ihr < 0 || ihr > 23)
+        valido = 0;
+
+    return valido;
+}
+
 bool temMaisde18(string dataNasc);
 bool validaCPF(char cpf[12]) {
     // Verifica se o CPF possui 11 dígitos
