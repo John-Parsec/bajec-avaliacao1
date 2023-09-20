@@ -144,7 +144,7 @@ void incluirPassageiro(vector<Passageiro> &passageiros) {
     Passageiro passageiro;
     do {
         cout << "Digite o cpf do passageiro: ";
-        cin >> passageiro.cpf;
+        cin >> passageiro.cpf;//só aceita CPFs reais
         if (!validaCPF(passageiro.cpf)) {
             cout << "CPF inválido" << endl;
         }
