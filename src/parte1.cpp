@@ -7,17 +7,23 @@ using namespace std;
 struct Passageiro{
     string Cpf;
     string Nome;
-    int DtNascimento;
+    string DtNascimento;
     int NumAutorizacao;
+};
+
+struct data_hora{
+    string Data;
+    string Hora;
 };
 
 struct Roteiro{
     int Codigo;
-    string Data_hora;
+    data_hora Data_hora;
     string Duracao;
     string Origem;
     string Destino;
 };
+
 
 void MenuPassageiro();
 void MenuRoteiro();
@@ -31,6 +37,9 @@ void ExcluirRoteiro(vector<Roteiro> &roteiros);
 void AlterarRoteiro(vector<Roteiro> &roteiros);
 void ListarRoteiro(vector<Roteiro> &roteiros);
 void LocalizarRoteiro(vector<Roteiro> &roteiros);
+bool verificar_data(string data);
+bool verificar_hora(string hora);
+bool verificar_cpf(string cpf);
 
 int main(){
     vector<Passageiro> passageiros;
@@ -137,12 +146,17 @@ void MenuRoteiro(){
 
 void IncluirPassageiro(vector<Passageiro> &passageiros){
 
-    string cpf;
+    string cpf, dtNascimento;
     Passageiro passageiro;
 
-    cout << "Digite o CPF: ";
+    cout << "Digite o CPF:(11 numeros) ";
     cin >> cpf;
-    
+    if(!verificar_cpf(cpf))
+    {
+        cout << "CPF invalido!" << endl;
+        return;
+    }
+
     for (int i = 0; i < passageiros.size(); i++) {
         if (passageiros[i].Cpf == cpf) {
             cout << "Passageiro já cadastrado!" << endl;
@@ -153,8 +167,16 @@ void IncluirPassageiro(vector<Passageiro> &passageiros){
     passageiro.Cpf = cpf;
     cout << "Digite o Nome: ";
     cin >> passageiro.Nome;
-    cout << "Digite a Data de Nascimento: ";
-    cin >> passageiro.DtNascimento;
+    cout << "Digite a Data de Nascimento:(dd/mm/aaaa) ";
+    cin >> dtNascimento;
+
+    if(!verificar_data(dtNascimento))
+    {
+        cout << "Data invalida!" << endl;
+        return;
+    }
+
+    passageiro.DtNascimento = dtNascimento;
     cout << "Digite o Numero de Autorizacao: ";
     cin >> passageiro.NumAutorizacao;
     
@@ -165,8 +187,14 @@ void IncluirPassageiro(vector<Passageiro> &passageiros){
 
 void ExcluirPassageiro(vector<Passageiro> &passageiros){
     string cpf;
-    cout << "Digite o CPF: ";
+    cout << "Digite o CPF:(11 numeros) ";
     cin >> cpf;
+
+    if(!verificar_cpf(cpf))
+    {
+        cout << "CPF invalido!" << endl;
+        return;
+    }
 
     for(int i = 0; i < passageiros.size(); i++){
         if(passageiros[i].Cpf == cpf){
@@ -179,9 +207,9 @@ void ExcluirPassageiro(vector<Passageiro> &passageiros){
 }
 
 void AlterarPassageiro(vector<Passageiro> &passageiros){
-    string cpf;
+    string cpf, dtNascimento;
     char opcao;
-    cout << "Digite o CPF: ";
+    cout << "Digite o CPF:(11 numeros) ";
     cin >> cpf;
 
     for(int i = 0; i < passageiros.size(); i++){
@@ -194,8 +222,14 @@ void AlterarPassageiro(vector<Passageiro> &passageiros){
             cout << "Deseja alterar o CPF? (S/N): ";
             cin >> opcao;
             if(opcao == 'S' || opcao == 's'){
-                cout << "Digite o CPF: ";
+                cout << "Digite o CPF:(11 numeros) ";
                 cin >> cpf;
+                
+                if(!verificar_cpf(cpf))
+                {
+                    cout << "CPF invalido!" << endl;
+                    return;
+                }
 
                 for(int j = 0; j < passageiros.size(); j++){
                     if(passageiros[j].Cpf == cpf){
@@ -214,8 +248,16 @@ void AlterarPassageiro(vector<Passageiro> &passageiros){
             cout << "Deseja alterar a Data de Nascimento? (S/N): ";
             cin >> opcao;
             if(opcao == 'S' || opcao == 's'){
-                cout << "Digite a Data de Nascimento: ";
-                cin >> passageiros[i].DtNascimento;
+                cout << "Digite a Data de Nascimento:(dd/mm/aaaa) ";
+                cin >> dtNascimento;
+
+                if(!verificar_data(dtNascimento))
+                {
+                    cout << "Data invalida!" << endl;
+                    return;
+                }
+
+                passageiros[i].DtNascimento = dtNascimento;
             }
             cout << "Deseja alterar o Numero de Autorizacao? (S/N): ";
             cin >> opcao;
@@ -248,8 +290,14 @@ void ListarPassageiro(vector<Passageiro> &passageiros){
 
 void LocalizarPassageiro(vector<Passageiro> &passageiros){
     string cpf;
-    cout << "Digite o CPF: ";
+    cout << "Digite o CPF:(11 numeros) ";
     cin >> cpf;
+
+    if(!verificar_cpf(cpf))
+    {
+        cout << "CPF invalido!" << endl;
+        return;
+    }
 
     for(int i = 0; i < passageiros.size(); i++){
         if(passageiros[i].Cpf == cpf){
@@ -279,8 +327,10 @@ void IncluirRoteiro(vector<Roteiro> &roteiros){
     }
 
     roteiro.Codigo = codigo;
-    cout << "Digite a Data e Hora: ";
-    cin >> roteiro.Data_hora;
+    cout << "Digite a Data:(dd/mm/aaaa) ";
+    cin >> roteiro.Data_hora.Data;
+    cout << "Digite a Hora:(hh:mm) ";
+    cin >> roteiro.Data_hora.Hora;
     cout << "Digite a Duracao: ";
     cin >> roteiro.Duracao;
     cout << "Digite a Origem: ";
@@ -316,7 +366,8 @@ void AlterarRoteiro(vector<Roteiro> &roteiros){
     for(int i = 0; i < roteiros.size(); i++){
         if(roteiros[i].Codigo == codigo){
             cout << "Codigo: " << roteiros[i].Codigo << endl;
-            cout << "Data e Hora: " << roteiros[i].Data_hora << endl;
+            cout << "Data: " << roteiros[i].Data_hora.Data << endl;
+            cout << "Hora: " << roteiros[i].Data_hora.Hora << endl;
             cout << "Duracao: " << roteiros[i].Duracao << endl;
             cout << "Origem: " << roteiros[i].Origem << endl;
             cout << "Destino: " << roteiros[i].Destino << endl;
@@ -335,11 +386,17 @@ void AlterarRoteiro(vector<Roteiro> &roteiros){
                 }
                 roteiros[i].Codigo;
             }
-            cout << "Deseja alterar a Data e Hora? (S/N): ";
+            cout << "Deseja alterar a Data (S/N): ";
             cin >> opcao;
             if(opcao == 'S' || opcao == 's'){
-                cout << "Digite a Data e Hora: ";
-                cin >> roteiros[i].Data_hora;
+                cout << "Digite a Data:(dd/mm/aaaa) ";
+                cin >> roteiros[i].Data_hora.Data;
+            }
+            cout << "Deseja alterar a Hora? (S/N): ";
+            cin >> opcao;
+            if(opcao == 'S' || opcao == 's'){
+                cout << "Digite a Hora:(hh:mm) ";
+                cin >> roteiros[i].Data_hora.Hora;
             }
             cout << "Deseja alterar a Duracao? (S/N): ";
             cin >> opcao;
@@ -374,7 +431,8 @@ void ListarRoteiro(vector<Roteiro> &roteiros){
     else{
         for(int i = 0; i < roteiros.size(); i++){
             cout << "Codigo: " << roteiros[i].Codigo << endl;
-            cout << "Data e Hora: " << roteiros[i].Data_hora << endl;
+            cout << "Data: " << roteiros[i].Data_hora.Data << endl;
+            cout << "Hora: " << roteiros[i].Data_hora.Hora << endl;
             cout << "Duracao: " << roteiros[i].Duracao << endl;
             cout << "Origem: " << roteiros[i].Origem << endl;
             cout << "Destino: " << roteiros[i].Destino << endl;
@@ -391,7 +449,8 @@ void LocalizarRoteiro(vector<Roteiro> &roteiros){
     for(int i = 0; i < roteiros.size(); i++){
         if(roteiros[i].Codigo == codigo){
             cout << "Codigo: " << roteiros[i].Codigo << endl;
-            cout << "Data e Hora: " << roteiros[i].Data_hora << endl;
+            cout << "Data: " << roteiros[i].Data_hora.Data << endl;
+            cout << "Hora: " << roteiros[i].Data_hora.Hora << endl;
             cout << "Duracao: " << roteiros[i].Duracao << endl;
             cout << "Origem: " << roteiros[i].Origem << endl;
             cout << "Destino: " << roteiros[i].Destino << endl;
@@ -402,3 +461,87 @@ void LocalizarRoteiro(vector<Roteiro> &roteiros){
     cout << "Roteiro nao encontrado!" << endl;
 }
 
+bool verificar_data(string data)
+{
+    string d, m, a, str;
+    int id, im, ia;
+    bool valido = 1;
+
+    str = data;
+
+    if(data.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        d = str.substr(0, 2);
+        m = str.substr(3, 2);
+        a = str.substr(6, 4);
+
+        id = stoi(d);
+        im = stoi(m);
+        ia = stoi(a);
+    }
+
+    if(im < 1 || im > 12 || id < 1 || id > 31)
+        valido = 0;
+
+    if(valido && (im == 4 || im == 6 || im == 9 || im == 11) && id > 30)
+        valido = 0;
+
+    if(valido && im == 2)
+    {
+        if (ia % 4 == 0 && id > 29)
+            valido = 0;
+        else if (ia % 4 !=0 && id > 28)
+            valido = 0;
+    }
+
+    if(valido && ia > 2023)
+        valido = 0;
+
+    return valido;
+}
+
+bool verificar_hora(string hora)
+{
+    string hr, min, str;
+    int ihr, imin;
+    bool valido = 1;
+
+    str = hora;
+
+    if(str.size() != 5)
+    {
+        valido = 0;
+    }
+    else
+    {
+        hr = str.substr(0, 2);
+        min = str.substr(3, 2);
+
+        ihr = stoi(hr);
+        imin = stoi(min);
+    }
+
+    if(imin < 0 || imin > 59)
+        valido = 0;
+
+    if(ihr < 0 || ihr > 23)
+        valido = 0;
+
+    return valido;
+}
+
+bool verificar_cpf(string cpf)
+{
+    bool valido = 1;
+    if(cpf.size() != 11) {valido = 0;}
+    for(int i = 0; i < 11 && valido; i++)
+    {
+        if(cpf[i] < 48 || cpf[i] > 57) {valido = 0;}
+    }
+
+    return valido;
+}
