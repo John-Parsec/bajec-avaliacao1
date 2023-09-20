@@ -53,6 +53,12 @@ void listPassageiros(vector<Passageiro> passageiros);
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF);
 string formatData(Data data);
 
+bool addRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo);
+bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+void listRoteiros(vector<Roteiro> roteiros);
+bool buscRoteiro(vector<Roteiro> roteiros, string codigo);
+
 
 
 int main(){
@@ -365,3 +371,79 @@ bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int
         return false;
     }
 }
+
+bool addRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
+    Roteiro rot;
+    Hora duracao;
+    if (inicializaRoteiro(rot, codigo, datahora, duracaoHora, duracaoMin, origem, destino) && incializaDuracao(duracao, duracaoHora, duracaoMin)){
+        for (int i = 0; i < roteiros.size(); i++){
+            if (roteiros[i].codigo == rot.codigo || 
+                (roteiros[i].datahora.data.dia == rot.datahora.data.dia && roteiros[i].datahora.data.mes == rot.datahora.data.mes && roteiros[i].datahora.data.ano == rot.datahora.data.ano &&
+                roteiros[i].datahora.horario.hora == rot.datahora.horario.hora && roteiros[i].datahora.horario.minuto == rot.datahora.horario.minuto)){
+                return false;
+            }
+        }
+        roteiros.push_back(rot);
+        return true;
+    }
+    return false;
+}
+
+bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo){
+    for (int i = 0; i < roteiros.size(); i++){
+        if (roteiros[i].codigo == codigo){
+            roteiros.erase(roteiros.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
+    Roteiro rot;
+    Hora duracao;
+    if (inicializaRoteiro(rot, codigo, datahora, duracaoHora, duracaoMin, origem, destino) && incializaDuracao(duracao, duracaoHora, duracaoMin) && validaDataHora(datahora)){
+        for (int i = 0; i < roteiros.size(); i++){
+            if (roteiros[i].codigo == rot.codigo){
+                roteiros[i].origem = rot.origem;
+                roteiros[i].destino = rot.destino;
+                roteiros[i].duracao = rot.duracao;
+                roteiros[i].datahora = rot.datahora;
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
+void listRoteiros(vector<Roteiro> roteiros){
+    cout << "Codigo\t\tData\t\tHora\t\tDuracao\t\tOrigem\t\tDestino" << endl;
+    for (int i = 0; i < roteiros.size(); i++){
+        cout << roteiros[i].codigo;
+        cout << "\t\t" << formatData(roteiros[i].datahora.data);
+        cout << "\t\t" << roteiros[i].datahora.horario.hora << ":" << roteiros[i].datahora.horario.minuto;
+        cout << "\t\t" << roteiros[i].duracao.hora << ":" << roteiros[i].duracao.minuto;
+        cout << "\t\t" << roteiros[i].origem;
+        cout << "\t\t" << roteiros[i].destino << endl;
+    }
+    cout << endl;
+}
+
+bool buscRoteiro(vector<Roteiro> roteiros, string codigo){
+    for (int i = 0; i < roteiros.size(); i++){
+        if (roteiros[i].codigo == codigo){
+            cout << "cod.: " << roteiros[i].codigo;
+            cout << " | Data: " << formatData(roteiros[i].datahora.data);
+            cout << " | Hora: " << roteiros[i].datahora.horario.hora << ":" << roteiros[i].datahora.horario.minuto;
+            cout << " | Duracao: " << roteiros[i].duracao.hora << ":" << roteiros[i].duracao.minuto; 
+            cout << " | Origem: " << roteiros[i].origem;
+            cout << " | Destino: " << roteiros[i].destino << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
