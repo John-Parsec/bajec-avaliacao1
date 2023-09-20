@@ -195,7 +195,15 @@ void AlterarPassageiro(vector<Passageiro> &passageiros){
             cin >> opcao;
             if(opcao == 'S' || opcao == 's'){
                 cout << "Digite o CPF: ";
-                cin >> passageiros[i].Cpf;
+                cin >> cpf;
+
+                for(int j = 0; j < passageiros.size(); j++){
+                    if(passageiros[j].Cpf == cpf){
+                        cout << "Passageiro ja cadastrado!" << endl;
+                        return;
+                    }
+                }
+                passageiros[i].Cpf;
             }
             cout << "Deseja alterar o Nome? (S/N): ";
             cin >> opcao;
