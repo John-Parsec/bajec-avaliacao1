@@ -58,7 +58,10 @@ bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo);
 bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 void listRoteiros(vector<Roteiro> roteiros);
 bool buscRoteiro(vector<Roteiro> roteiros, string codigo);
+void menuRoteiro(vector<Roteiro> &roteiros);
 
+bool validarInputData(string data);
+void dataToNum(string data, short int &dia, short int &mes, int &ano);
 
 
 int main(){
@@ -74,7 +77,7 @@ int main(){
 
 void menuPassageiros(vector<Passageiro> &passageiros){
     int opc, ano;
-    string CPF, nome, NumAutorizacao;
+    string CPF, nome, NumAutorizacao, data;
     short int dia, mes;
 
     do{
@@ -91,16 +94,18 @@ void menuPassageiros(vector<Passageiro> &passageiros){
             case 1:
                 cout << "CPF: ";
                 cin >> CPF;
-                cout << "Nome do passageiro: ";
+                cout << "Nome: ";
                 cin >> nome;
-                cout << "Dia de nascimento: ";
-                cin >> dia;
-                cout << "Mes de nascimento: ";
-                cin >> mes;
-                cout << "Ano de nascimento: ";
-                cin >> ano;
+
+                do{
+                    cout << "Data de nascimento (DD/MM/AAAA): ";
+                    cin >> data;
+                }while(!validarInputData(data));
+                dataToNum(data, dia, mes, ano);
+
                 cout << "Digite o numero de autorizacao do passageiro: ";
                 cin >> NumAutorizacao;
+
                 if (addPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao))
                     cout << "Passageiro adicionado com sucesso.\n\n";
                 else
@@ -184,8 +189,12 @@ bool deletePassageiro(vector<Passageiro> &passageiros, string CPF){
 string formatData(Data data){
     string dataFormatada = "";
 
+    if(data.dia < 10)
+        dataFormatada += "0";
     dataFormatada += to_string(data.dia);
     dataFormatada += "/";
+    if(data.mes < 10)
+        dataFormatada += "0";
     dataFormatada += to_string(data.mes);
     dataFormatada += "/";
     dataFormatada += to_string(data.ano);
@@ -295,6 +304,49 @@ bool validarData(short int dia, short int mes, int ano){
     return true;
 }
 
+bool validarInputData(string data){
+    vector<string> dataSeparada;
+    string aux = "";
+    int i;
+
+    for(i = 0; i<=data.size(); i++){
+        if(i != data.size()){
+            if(data[i] != '/')
+                aux += data[i];
+            else{
+                dataSeparada.push_back(aux);
+                aux = "";
+            }
+        }else
+            dataSeparada.push_back(aux);
+    }
+
+    if(dataSeparada.size() != 3)
+        return false;
+
+    for (i=0; i<3; i++){
+        if(i == 2){
+            if(dataSeparada[i].size() != 4)
+                return false;
+        }else{
+            if(dataSeparada[i].size() != 2)
+                return false;
+        }
+        for(char ch: dataSeparada[i]){
+            if(!isdigit(ch))
+                return false;
+        }
+    }
+
+    return true;
+}
+
+void dataToNum(string data, short int &dia, short int &mes, int &ano){
+    dia = stoi(data.substr(0,2));
+    mes = stoi(data.substr(3,2));
+    ano = stoi(data.substr(6));
+}
+
 bool validaHora(short int hora, short int minuto){
     if (hora < 0 || hora > 23 || minuto < 0 || minuto > 59){
         return false;
@@ -348,7 +400,7 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
 
 void menuRoteiro(vector<Roteiro> &roteiros){
     int opc, ano;
-    string codigo, origem, destino;
+    string codigo, origem, destino, data;
     short int dia, mes, duracaoHora, duracaoMin, hora, min;
     DataHora datahora;
     do{
@@ -365,12 +417,13 @@ void menuRoteiro(vector<Roteiro> &roteiros){
             case 1:
                 cout << "Codigo: ";
                 cin >> codigo;
-                cout << "Dia: ";
-                cin >> dia;
-                cout << "Mes: ";
-                cin >> mes;
-                cout << "Ano: ";
-                cin >> ano;
+
+                do{
+                    cout << "Data (DD/MM/AAAA): ";
+                    cin >> data;
+                }while(!validarInputData(data));
+                dataToNum(data, dia, mes, ano);
+
                 cout << "Hora: ";
                 cin >> hora;
                 cout << "Minuto: ";
