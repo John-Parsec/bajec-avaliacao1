@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Pastas
+.vscode/
+src/output/
