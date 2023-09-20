@@ -426,7 +426,19 @@ void alterarPassageiro(vector<passageiro> &passageiros){
             cin >> opt;
             if(opt == 's'){
                 cout << "CPF: ";
-                cin >> it->cpf;
+                cin >> cpf;
+
+                if(!validaCPF(cpf)){
+                    cout << "CPF inválido!" << endl;
+                    return;
+                }
+
+                if(!cpfIsUnique(passageiros, cpf)){
+                    cout << "CPF já cadastrado!" << endl;
+                    return;
+                }
+
+                it->cpf = cpf;
             }
             
             cout << "Deseja alterar a data de nascimento? (s/n): ";
@@ -435,6 +447,11 @@ void alterarPassageiro(vector<passageiro> &passageiros){
                 cout << "Data de nascimento: ";
                 cin >> dataNascimento;
                 it->dataNascimento = stringToDate(dataNascimento);
+
+                if(!validaData(it->dataNascimento)){
+                    cout << "Data inválida!" << endl;
+                    return;
+                }
             }
             
             cout << "Deseja alterar o número de autorização? (s/n): ";
@@ -630,6 +647,11 @@ void alterarRoteiro(vector<roteiro> &roteiros){
                 cout << "Hora prevista: ";
                 cin >> hora;
                 it->data_horaPrevista.h = stringToHora(hora);
+
+                if(!validaDataHora(it->data_horaPrevista)){
+                    cout << "Data inválida!" << endl;
+                    return;
+                }
             }
             
             cout << "Deseja alterar a duração? (s/n): ";
