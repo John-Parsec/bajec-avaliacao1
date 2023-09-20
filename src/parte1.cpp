@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ struct data_hora{
 
 struct passageiro{
     string nome;
-    char cpf[12];
+    string cpf;
     date dataNascimento;
     int numAutorizacao;
 };
@@ -38,12 +39,12 @@ bool validaData(string data);
 bool validaHora(string data_hora);
 bool validaDataHora(string data_hora);
 bool validaCPF(string cpf);
+bool cpfIsUnique(vector<passageiro> &passageiros, string cpf);
 date stringToDate(string str);
 hora stringToHora(string str);
 string dateToString(date d);
 string horaToString(hora h);
 string dataHoraToString(data_hora dh);
-data_hora stringToDataHora(string str);
 string cpfNum(string cpf);
 
 void gerirPassageiros(vector<passageiro> &passageiros);
@@ -126,7 +127,6 @@ bool validaData(date data){
 
     return true;
 }
-
 
 bool validaHora(hora h){
     int hora, minuto;
@@ -215,33 +215,12 @@ string dateToString(date d){
     return str;
 }
 
-
 string horaToString(hora h){
     string str;
 
     str = to_string(h.hora) + ":" + to_string(h.minuto);
 
     return str;
-}
-
-data_hora stringToDataHora(string str){
-    data_hora dh;
-    string aux;
-    int i;
-
-    for(i = 0; i < str.length(); i++){
-        aux += str[i];
-
-        if(str[i] == ' '){
-            dh.d = stringToDate(aux);
-            aux = "";
-        }
-    }
-            
-    dh.h = stringToHora(aux);
-    aux = "";
-
-    return dh;
 }
 
 string dataHoraToString(data_hora dh){
@@ -265,7 +244,7 @@ string cpfNum(string cpf){
 }
 
 bool validaCPF(string cpf){
-    int i, j, k, soma = 0, digito1, digito2;
+    int i, j, soma = 0, digito1, digito2;
     int cpfInt[11];
     string cpfNumStr; 
 
@@ -362,6 +341,7 @@ void incluirPassageiro(vector<passageiro> &passageiros){
     passageiro p;
     int idade;
     string dataNascimento;
+
     cout << "Nome: ";
     cin >> p.nome;
     cout << "CPF: ";
@@ -386,7 +366,7 @@ void incluirPassageiro(vector<passageiro> &passageiros){
         cout << "Data inválida!" << endl;
         return;
     }
-
+    
     cout << "Idade: ";
     cin >> idade;
 
@@ -518,7 +498,7 @@ void gerirRoteiros(vector<roteiro> &roteiros){
     short int opt;
 
     do{
-        system("clear");
+        //system("clear");
         
         cout << "\n\nMenu de opções (Roteiros)" << endl;
         cout << "1. Incluir." << endl;
@@ -559,7 +539,7 @@ void gerirRoteiros(vector<roteiro> &roteiros){
 
 void incluirRoteiro(vector<roteiro> &roteiros){
     roteiro r;
-    string data_hora;
+    string date, hora;
 
     cout << "Origem: ";
     cin >> r.origem;
@@ -567,10 +547,13 @@ void incluirRoteiro(vector<roteiro> &roteiros){
     cin >> r.destino;
     cout << "Código: ";
     cin >> r.codigo;
-    cout << "Data e hora prevista (dd/mm/aaaa hh:mm): ";
-    cin >> data_hora;
+    cout << "Data prevista (dd/mm/aaaa): ";
+    cin >> date;
+    cout << "Hora prevista (hh:mm): ";
+    cin >> hora;
 
-    r.data_horaPrevista = stringToDataHora(data_hora);
+    r.data_horaPrevista.d = stringToDate(date);
+    r.data_horaPrevista.h = stringToHora(hora);
 
     if(!validaDataHora(r.data_horaPrevista)){
         cout << "Data inválida!" << endl;
@@ -611,7 +594,7 @@ void alterarRoteiro(vector<roteiro> &roteiros){
     bool achou = false;
     char opt;
     string codigo;
-    string data_hora;
+    string data, hora;
     cout << "Código: ";
     cin >> codigo;
 
@@ -641,9 +624,12 @@ void alterarRoteiro(vector<roteiro> &roteiros){
             cout << "Deseja alterar a data e hora prevista? (s/n): ";
             cin >> opt;
             if(opt == 's'){
-                cout << "Data e hora prevista: ";
-                cin >> data_hora;
-                it->data_horaPrevista = stringToDataHora(data_hora);
+                cout << "Data prevista: ";
+                cin >> data;
+                it->data_horaPrevista.d = stringToDate(data);
+                cout << "Hora prevista: ";
+                cin >> hora;
+                it->data_horaPrevista.h = stringToHora(hora);
             }
             
             cout << "Deseja alterar a duração? (s/n): ";
