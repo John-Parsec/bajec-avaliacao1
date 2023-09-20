@@ -325,7 +325,15 @@ void AlterarRoteiro(vector<Roteiro> &roteiros){
             cin >> opcao;
             if(opcao == 'S' || opcao == 's'){
                 cout << "Digite o Codigo: ";
-                cin >> roteiros[i].Codigo;
+                cin >> codigo;
+
+                for(int j = 0; j < roteiros.size(); j++){
+                    if(roteiros[j].Codigo == codigo){
+                        cout << "Roteiro ja cadastrado!" << endl;
+                        return;
+                    }
+                }
+                roteiros[i].Codigo;
             }
             cout << "Deseja alterar a Data e Hora? (S/N): ";
             cin >> opcao;
