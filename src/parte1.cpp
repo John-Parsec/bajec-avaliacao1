@@ -61,9 +61,6 @@ bool verificar_data(string data)
             valido = 0;
     }
 
-    if(valido && ia > 2023)
-        valido = 0;
-
     return valido;
 }
 
