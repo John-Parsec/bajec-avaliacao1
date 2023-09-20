@@ -53,6 +53,8 @@ void listPassageiros(vector<Passageiro> passageiros);
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF);
 Passageiro returnPassasgeiro(vector<Passageiro> passageiros, string CPF);
 string formatData(Data data);
+bool validarInputHora(string hora);
+void horaToNum(string hora, short int &horaNum, short int &minutoNum);
 
 bool addRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo);
@@ -446,7 +448,7 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
 
 void menuRoteiro(vector<Roteiro> &roteiros){
     int opc, ano;
-    string codigo, origem, destino, data;
+    string codigo, origem, destino, data, inputHora;
     short int dia, mes, duracaoHora, duracaoMin, hora, min;
     DataHora datahora;
     Roteiro rot;
@@ -473,14 +475,16 @@ void menuRoteiro(vector<Roteiro> &roteiros){
                 }while(!validarInputData(data));
                 dataToNum(data, dia, mes, ano);
 
-                cout << "Hora: ";
-                cin >> hora;
-                cout << "Minuto: ";
-                cin >> min;
-                cout << "Duracao (horas): ";
-                cin >> duracaoHora;
-                cout << "Duracao (minutos): ";
-                cin >> duracaoMin;
+                do{
+                    cout << "Hora (HH:MM): ";
+                    cin >> inputHora;
+                }while(!validarInputHora(inputHora));
+                horaToNum(inputHora, hora, min);
+
+                do{
+                    cout << "Duracao (HH:MM): ";
+                    cin >> inputHora;
+                }while(!validarInputHora(inputHora));
                 cout << "Origem: ";
                 cin >> origem;
                 cout << "Destino: ";
@@ -521,10 +525,9 @@ void menuRoteiro(vector<Roteiro> &roteiros){
                     cin >> ch;
                     ch = tolower(ch);
                     if(ch == 's'){
-                        cout << "Nova hora: ";
-                        cin >> hora;
-                        cout << "Novo minuto: ";
-                        cin >> min;
+                        cout << "Nova hora (HH:MM): ";
+                        cin >> inputHora;
+                        horaToNum(inputHora, hora, min);
                     }else{
                         hora = rot.datahora.horario.hora;
                         min = rot.datahora.horario.minuto;
@@ -533,10 +536,9 @@ void menuRoteiro(vector<Roteiro> &roteiros){
                     cin >> ch;
                     ch = tolower(ch);
                     if(ch == 's'){
-                        cout << "Nova duracao (horas): ";
-                        cin >> duracaoHora;
-                        cout << "Nova duracao (minutos): ";
-                        cin >> duracaoMin;
+                        cout << "Nova duracao (HH:MM): ";
+                        cin >> inputHora;
+                        horaToNum(inputHora, duracaoHora, duracaoMin);
                     }else{
                         duracaoHora = rot.duracao.hora;
                         duracaoMin = rot.duracao.minuto;
@@ -720,4 +722,40 @@ string formatCPF(string CPF){
     CPFFormatado += CPF.substr(9);
 
     return CPFFormatado;
+}
+
+bool validarInputHora(string hora){
+    vector<string> horaSeparada;
+    string aux = "";
+    int i;
+
+    for(i = 0; i<=hora.size(); i++){
+        if(i != hora.size()){
+            if(hora[i] != ':')
+                aux += hora[i];
+            else{
+                horaSeparada.push_back(aux);
+                aux = "";
+            }
+        }else
+            horaSeparada.push_back(aux);
+    }
+
+    if(horaSeparada.size() != 2)
+        return false;
+
+    for (i=0; i<2; i++){
+        if(horaSeparada[i].size() != 2)
+            return false;
+        for(char ch: horaSeparada[i]){
+            if(!isdigit(ch))
+                return false;
+        }
+    }
+    return true;
+}
+
+void horaToNum(string hora, short int &horaNum, short int &minutoNum){
+    horaNum = stoi(hora.substr(0,2));
+    minutoNum = stoi(hora.substr(3));
 }
