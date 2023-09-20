@@ -101,20 +101,18 @@ void menuPassageiros(vector<Passageiro> &passageiros){
                 cin >> ano;
                 cout << "Digite o numero de autorizacao do passageiro: ";
                 cin >> NumAutorizacao;
-                if (addPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao)){
-                    cout << "Passageiro adicionado com sucesso." << endl;
-                }else{
-                    cout << "Erro ao adicionar passageiro." << endl;
-                }
+                if (addPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao))
+                    cout << "Passageiro adicionado com sucesso.\n\n";
+                else
+                    cout << "Erro ao adicionar passageiro.\n\n";
                 break;
             case 2:
                 cout << "Digite o CPF do passageiro: ";
                 cin >> CPF;
-                if (deletePassageiro(passageiros, CPF)){
-                    cout << "Passageiro removido com sucesso." << endl;
-                }else{
-                    cout << "Erro ao remover passageiro." << endl;
-                }
+                if (deletePassageiro(passageiros, CPF))
+                    cout << "Passageiro removido com sucesso.\n\n";
+                else
+                    cout << "Erro ao remover passageiro.\n\n";
                 break;
             case 3:
                 cout << "Digite o CPF do passageiro: ";
@@ -130,12 +128,12 @@ void menuPassageiros(vector<Passageiro> &passageiros){
                     cin >> ano;
                     cout << "Novo numero de autorizacao : ";
                     cin >> NumAutorizacao;
-                    if (alteraPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao)){
-                        cout << "Passageiro alterado com sucesso." << endl;
-                    }else{
-                        cout << "Erro ao alterar passageiro." << endl;
-                    }
-                }
+                    if (alteraPassageiro(passageiros, CPF, nome, dia, mes, ano, NumAutorizacao))
+                        cout << "Passageiro alterado com sucesso.\n\n";
+                    else
+                        cout << "Erro ao alterar passageiro.\n\n";
+                }else
+                    cout << "Passageiro nao encontrado.\n\n";
                 break;
             case 4:
                 listPassageiros(passageiros);
@@ -143,11 +141,7 @@ void menuPassageiros(vector<Passageiro> &passageiros){
             case 5:
                 cout << "Digite o CPF do passageiro: ";
                 cin >> CPF;
-                if (buscPassageiro(passageiros, CPF)){
-                    cout << "Passageiro encontrado." << endl;
-                }else{
-                    cout << "Passageiro nao encontrado." << endl;
-                }
+                cout << ((buscPassageiro(passageiros, CPF))? "\n\n": "Passageiro nao encontrado.\n\n");
                 break;
             case 6:
                 break;
@@ -166,6 +160,7 @@ bool addPassageiro(vector<Passageiro> &passageiros, string CPF, string nome, sho
     if(inicializaPassageiro(pas, CPF, nome, diaNasc, mesNasc, anoNasc, NumAutorizacao)){
         for (int i = 0; i < passageiros.size(); i++){
             if (passageiros[i].CPF == pas.CPF){
+                cout << "CPF ja cadastrado.";
                 return false;
             }
         }
@@ -199,12 +194,12 @@ string formatData(Data data){
 }
 
 void listPassageiros(vector<Passageiro> passageiros){
-    cout << "CPF\t\tNome\t\tData de Nascimento\t\tNumero de Autorizacao" << endl;
+    cout << "CPF\t\tNome\t\tData de Nascimento\tNumero de Autorizacao\n";
     for (int i = 0; i < passageiros.size(); i++){
         cout << passageiros[i].CPF;
-        cout << " " << passageiros[i].nome;
-        cout << "  " << formatData(passageiros[i].DtNascimento);
-        cout << " " << passageiros[i].NumAutorizacao << endl;
+        cout << "\t" << passageiros[i].nome;
+        cout << "\t" << formatData(passageiros[i].DtNascimento);
+        cout << "\t" << passageiros[i].NumAutorizacao << endl;
     }
     cout << endl;
 }
@@ -212,7 +207,9 @@ void listPassageiros(vector<Passageiro> passageiros){
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF){
     for (int i = 0; i < passageiros.size(); i++){
         if (passageiros[i].CPF == CPF){
-            cout << "Nome: " << passageiros[i].nome << " | Data de nascimento: " << formatData(passageiros[i].DtNascimento) << ((passageiros[i].NumAutorizacao != "")? "Numero de autorizacao" + passageiros[i].NumAutorizacao: "\n");
+            cout << "Nome: " << passageiros[i].nome;
+            cout <<  " | Data de nascimento: " << formatData(passageiros[i].DtNascimento);
+            cout << ((passageiros[i].NumAutorizacao != "")? " | Numero de autorizacao: " + passageiros[i].NumAutorizacao: "\n");
             return true;
         }
     }
@@ -291,13 +288,10 @@ bool validarData(short int dia, short int mes, int ano){
         else if (dia > 28){
             return false;
         }
-    }else if (mes == 4 || mes == 6 || mes == 9 || mes == 11){
-        if (dia > 30){
-            return false;
-        }else if (dia > 31){
-            return false;
-        }
-    }
+    }else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && dia >30)
+        return false;
+    else if(dia > 31)
+        return false;
     return true;
 }
 
@@ -437,10 +431,7 @@ void menuRoteiro(vector<Roteiro> &roteiros){
             case 5:
                 cout << "Digite o codigo do roteiro: ";
                 cin >> codigo;
-                if (buscRoteiro(roteiros, codigo))
-                    cout << "Roteiro encontrado." << endl;
-                else
-                    cout << "Roteiro nao encontrado." << endl;
+                cout << (buscRoteiro(roteiros, codigo)? "\n\n" : "Roteiro nao encontrado.\n\n");
                 break;
             case 6:
                 break;
