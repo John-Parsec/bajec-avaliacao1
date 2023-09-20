@@ -42,7 +42,7 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
 bool inicializaData(Data &data, short int dia, short int mes, int ano);
 bool inicializaHora(Hora &Hora, short int hora, short int minuto);
 bool inicializaDataHora(DataHora &datahora, short int min, short int hora, short int dia, short int mes, int ano);
-bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+bool inicializaRoteiro(Roteiro &rot, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 bool validaDataHora(DataHora datahora);
 bool validarData(short int dia, short int mes, int ano);
 bool validaHora(short int hora, short int minuto);
@@ -53,9 +53,9 @@ void listPassageiros(vector<Passageiro> passageiros);
 bool buscPassageiro(vector<Passageiro> passageiros, string CPF);
 string formatData(Data data);
 
-bool addRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+bool addRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo);
-bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino);
+bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino);
 void listRoteiros(vector<Roteiro> roteiros);
 bool buscRoteiro(vector<Roteiro> roteiros, string codigo);
 
@@ -352,10 +352,112 @@ bool inicializaPassageiro(Passageiro &pas, string CPF, string nome, short int di
     }
 }
 
+void menuRoteiro(vector<Roteiro> &roteiros){
+    int opc, ano;
+    string codigo, origem, destino;
+    short int dia, mes, duracaoHora, duracaoMin, hora, min;
+    DataHora datahora;
+    do{
+        cout << "1 - Adicionar roteiro" << endl;
+        cout << "2 - Remover roteiro" << endl;
+        cout << "3 - Alterar roteiro" << endl;
+        cout << "4 - Listar roteiros" << endl;
+        cout << "5 - Busca roteiro" << endl;
+        cout << "6 - Sair" << endl;
+        cout << "Digite a opcao desejada: ";
+        cin >> opc;
 
-bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
+        switch (opc){
+            case 1:
+                cout << "Codigo: ";
+                cin >> codigo;
+                cout << "Dia: ";
+                cin >> dia;
+                cout << "Mes: ";
+                cin >> mes;
+                cout << "Ano: ";
+                cin >> ano;
+                cout << "Hora: ";
+                cin >> hora;
+                cout << "Minuto: ";
+                cin >> min;
+                cout << "Duracao (horas): ";
+                cin >> duracaoHora;
+                cout << "Duracao (minutos): ";
+                cin >> duracaoMin;
+                cout << "Origem: ";
+                cin >> origem;
+                cout << "Destino: ";
+                cin >> destino;
+                if (addRoteiro(roteiros, codigo, min, hora, dia, mes, ano, duracaoHora, duracaoMin, origem, destino))
+                    cout << "Roteiro adicionado com sucesso." << endl;
+                else
+                    cout << "Erro ao adicionar roteiro." << endl;
+                break;
+            case 2:
+                cout << "Digite o codigo do roteiro: ";
+                cin >> codigo;
+                if (deleteRoteiro(roteiros, codigo))
+                    cout << "Roteiro removido com sucesso." << endl;
+                else
+                    cout << "Erro ao remover roteiro." << endl;
+                break;
+            case 3:
+                cout << "Digite o codigo do roteiro: ";
+                cin >> codigo;
+                if(buscRoteiro(roteiros, codigo)){
+                    cout << "Novo dia: ";
+                    cin >> dia;
+                    cout << "Novo mes: ";
+                    cin >> mes;
+                    cout << "Novo ano: ";
+                    cin >> ano;
+                    cout << "Nova hora: ";
+                    cin >> hora;
+                    cout << "Novo minuto: ";
+                    cin >> min;
+                    cout << "Nova duracao (horas): ";
+                    cin >> duracaoHora;
+                    cout << "Nova duracao (minutos): ";
+                    cin >> duracaoMin;
+                    cout << "Nova origem: ";
+                    cin >> origem;
+                    cout << "Novo destino: ";
+                    cin >> destino;
+                    if(alteraRoteiro(roteiros, codigo, min, hora, dia, mes, ano, duracaoHora, duracaoMin, origem, destino))
+                        cout << "Roteiro alterado com sucesso." << endl;
+                    else
+                        cout << "Erro ao alterar roteiro." << endl;
+                }else
+                    cout << "Roteiro nao encontrado." << endl;
+                break;
+            case 4:
+                listRoteiros(roteiros);
+                break;
+            case 5:
+                cout << "Digite o codigo do roteiro: ";
+                cin >> codigo;
+                if (buscRoteiro(roteiros, codigo))
+                    cout << "Roteiro encontrado." << endl;
+                else
+                    cout << "Roteiro nao encontrado." << endl;
+                break;
+            case 6:
+                break;
+            default:
+                cout << "Opcao invalida." << endl;
+                cout << "Digite a opcao desejada: ";
+                cin >> opc;
+                break;
+        }
+    }while (opc!=6);
+}
+
+
+bool inicializaRoteiro(Roteiro &rot, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino){
     Hora duracao;
-    if (validaDataHora(datahora) && incializaDuracao(duracao, duracaoHora, duracaoMin)){
+    DataHora datahora;
+    if (inicializaDataHora(datahora, min, hora, dia, mes, ano) && incializaDuracao(duracao, duracaoHora, duracaoMin)){
         rot.codigo = codigo;
         rot.datahora = datahora;
         rot.duracao = duracao;
@@ -372,16 +474,12 @@ bool inicializaRoteiro(Roteiro &rot, string codigo, DataHora datahora, short int
     }
 }
 
-bool addRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
+bool addRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino){
     Roteiro rot;
-    Hora duracao;
-    if (inicializaRoteiro(rot, codigo, datahora, duracaoHora, duracaoMin, origem, destino) && incializaDuracao(duracao, duracaoHora, duracaoMin)){
+    if (inicializaRoteiro(rot, codigo, min, hora, dia, mes, ano, duracaoHora, duracaoMin, origem, destino)){
         for (int i = 0; i < roteiros.size(); i++){
-            if (roteiros[i].codigo == rot.codigo || 
-                (roteiros[i].datahora.data.dia == rot.datahora.data.dia && roteiros[i].datahora.data.mes == rot.datahora.data.mes && roteiros[i].datahora.data.ano == rot.datahora.data.ano &&
-                roteiros[i].datahora.horario.hora == rot.datahora.horario.hora && roteiros[i].datahora.horario.minuto == rot.datahora.horario.minuto)){
+            if (roteiros[i].codigo == rot.codigo)
                 return false;
-            }
         }
         roteiros.push_back(rot);
         return true;
@@ -399,10 +497,9 @@ bool deleteRoteiro(vector<Roteiro> &roteiros, string codigo){
     return false;
 }
 
-bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, DataHora datahora, short int duracaoHora, short int duracaoMin, string origem, string destino){
+bool alteraRoteiro(vector<Roteiro> &roteiros, string codigo, short int min, short int hora, short int dia, short int mes, int ano, short int duracaoHora, short int duracaoMin, string origem, string destino){
     Roteiro rot;
-    Hora duracao;
-    if (inicializaRoteiro(rot, codigo, datahora, duracaoHora, duracaoMin, origem, destino) && incializaDuracao(duracao, duracaoHora, duracaoMin) && validaDataHora(datahora)){
+    if (inicializaRoteiro(rot, codigo, min, hora, dia, mes, ano, duracaoHora, duracaoMin, origem, destino)){
         for (int i = 0; i < roteiros.size(); i++){
             if (roteiros[i].codigo == rot.codigo){
                 roteiros[i].origem = rot.origem;
