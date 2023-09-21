@@ -26,12 +26,19 @@ struct Roteiro {
     string destino;
 };
 
+struct Ocorrencia {
+    string descricao;
+    data_hora dt_hora;
+    int numApolice;
+};
+
 struct Embarca {
     bool realizada;
     int duracao;
     data_hora dt_hora;
     char passageiroCPF[12];
     char roteiroCodigo[12];
+    Ocorrencia ocorrencia;
 };
 
 //Data e hora
@@ -67,10 +74,15 @@ void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, 
 void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void listarEmbarques(vector<Embarca> embarques);
 
+//Ocorrência
+void gestaoOcorrencia(vector<Ocorrencia> &embarques);
+void incluirOcorrencia(vector<Ocorrencia> &embarques);
+
 int main(void) {
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
     vector<Embarca> embarques;
+    vector<Ocorrencia> ocorrencias;
 
     int resposta;
     do {
@@ -93,7 +105,7 @@ int main(void) {
                 gestaoEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
-                cout << "Espaco para gestao de Ocorrências" << endl;
+                gestaoOcorrencia(ocorrencias);
                 break;
         }
     } while (resposta != 0);
@@ -763,5 +775,88 @@ void listarEmbarques(vector<Embarca> embarques) {
         cout << embarques[i].duracao << "\t";
         cout << embarques[i].realizada << "\t";
         cout << endl;
+    }
+}
+
+
+
+
+
+
+//Ocorrência
+void gestaoOcorrencia(vector<Ocorrencia> &embarques){
+    int resposta;
+
+    do{
+        cout << endl << "Menu de Gestão de ocorrências:" << endl;
+        cout << "1 - Incluir" << endl;
+        cout << "2 - Excluir" << endl;
+        cout << "3 - Alterar" << endl;
+        cout << "4 - Listar" << endl;
+        cout << "0 - Sair" << endl;
+        cout << "Digite a opção desejada: ";
+        cin >> resposta;
+        cout << endl;
+        switch (resposta) {
+            case 1:
+                incluirOcorrencia(embarques);
+                break;
+            case 2:
+                cout << "Espaco para excluir ocorrencia" << endl;
+                break;
+            case 3:
+                cout << "Espaco para alterar ocorrencia" << endl;
+                break;
+            case 4:
+                cout << "Espaco para listar ocorrencia" << endl;
+                break;
+        }
+    } while (resposta != 0);
+}
+
+void incluirOcorrencia(vector<Embarca> &embarques){
+    Ocorrencia ocorrencia;
+    string resposta;
+    char cpf[12], codigo[12];
+    bool achou = false;
+
+    cout << "Digite o cpf do passageiro: ";
+    cin >> cpf;
+
+    cout << "Digite o codigo do roteiro: ";
+    cin >> codigo;
+
+    cout << "Digite a data da ocorrencia: ";
+    getline(cin >> ws, resposta);
+    while(!verificar_data(resposta)){
+        cout << "Data inválida, insira novamente: ";
+        getline(cin >> ws, resposta);
+    }
+    ocorrencia.dt_hora.Data = resposta;
+
+    cout << "Digite a hora da ocorrencia: ";
+    getline(cin >> ws, resposta);
+    while(!verificar_hora(resposta)){
+        cout << "Hora inválida, insira novamente: ";
+        getline(cin >> ws, resposta);
+    }
+    ocorrencia.dt_hora.Hora = resposta;
+
+    cout << "Digite a descricao da ocorrencia: ";
+    getline(cin >> ws, ocorrencia.descricao);
+    
+    for (int i = 0; i < embarques.size(); i++) {
+        if (strcmp(embarques[i].passageiroCPF, cpf) == 0 && strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
+            embarques[i].ocorrencia = ocorrencia;
+            achou = true;
+            break;
+        }
+    }
+
+    if(achou){
+        cout << "Ocorrencia cadastrada com sucesso" << endl;
+    }
+    else{
+        cout << "Embarque não encontrado" << endl;
     }
 }
