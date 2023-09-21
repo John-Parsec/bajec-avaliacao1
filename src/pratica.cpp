@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+
 using namespace std;
 
 struct Passageiro {
@@ -23,6 +24,12 @@ struct Roteiro {
     int duracao;
     string origem;
     string destino;
+};
+
+struct Embarca {
+    bool realizada;
+    int duracao;
+    data_hora data_hora;
 };
 
 //Data e hora
@@ -53,10 +60,14 @@ int buscarRoteiros(vector<Roteiro> roteiros, char cod[12]);
 void excluirRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 
+//Embarque
+void gestaoEmbarque(vector<Embarca> &embarques);
+void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 
 int main(void) {
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
+    vector<Embarca> embarques;
 
     int resposta;
     do {
@@ -76,10 +87,10 @@ int main(void) {
                 gestaoRoteiro(roteiros);
                 break;
             case 3:
-                std::cout << "Espaco para gestao de embarque" << endl;
+                gestaoEmbarque(embarques);
                 break;
             case 4:
-                std::cout << "Espaco para gestao de Ocorrências" << endl;
+                cout << "Espaco para gestao de Ocorrências" << endl;
                 break;
         }
     } while (resposta != 0);
@@ -90,7 +101,7 @@ int main(void) {
 //Data e hora
 bool verificar_data(string data)
 {
-    std::string d, m, a, str;
+    string d, m, a, str;
     int id, im, ia;
     bool valido = 1;
 
@@ -129,7 +140,7 @@ bool verificar_data(string data)
 
 bool verificar_dataNascimento(string data)
 {
-    std::string a, str;
+    string a, str;
     int ia;
     bool valido = 1;
 
@@ -155,7 +166,7 @@ bool verificar_dataNascimento(string data)
 
 bool verificar_hora(string hora)
 {
-    std::string hr, min, str;
+    string hr, min, str;
     int ihr, imin;
     bool valido = 1;
 
@@ -340,7 +351,7 @@ void incluirPassageiro(vector<Passageiro> &passageiros) {
     cin >> passageiro.dtNascimento;
     while(!verificar_dataNascimento(passageiro.dtNascimento))
     {
-        std::cout << "Data de nascimento inválida, insira novamente: ";
+        cout << "Data de nascimento inválida, insira novamente: ";
         cin >> passageiro.dtNascimento;
     }
 
@@ -425,7 +436,7 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
         cin >> resposta;
         while(!verificar_dataNascimento(resposta))
         {
-            std::cout << "Data de nascimento inválida, insira novamente: ";
+            cout << "Data de nascimento inválida, insira novamente: ";
             cin >> resposta;
         }
 
@@ -559,7 +570,7 @@ int buscarRoteiros(vector<Roteiro> roteiros, char codigo[12]) {
         return -1;
     }
     for (int i = 0; i < roteiros.size(); i++) {
-        std::cout << roteiros[i].codigo << " - " << codigo;
+        cout << roteiros[i].codigo << " - " << codigo;
         if (strcmp(roteiros[i].codigo, codigo) == 0) {
             cout << "Codigo: " << roteiros[i].codigo << endl;
             cout << "Data: " << roteiros[i].Data_hora.Data << endl;
@@ -580,7 +591,7 @@ void excluirRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
         return;
     }
     for (auto x = roteiros.begin(); x != roteiros.end(); x++) {
-        std::cout << "AAAAAAAAAAAAAAAAAAAAAA";
+        cout << "AAAAAAAAAAAAAAAAAAAAAA";
         if (strcmp(x->codigo, codigo) == 0) {
             roteiros.erase(x);
             cout << "Roteiro excluido com sucesso" << endl;
@@ -635,4 +646,106 @@ void alterarRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
         getline(cin >> ws, resposta);
         roteiros.at(posicao).destino = resposta;
     }
+}
+
+
+//Embarque
+void gestaoEmbarque(vector<Embarca> &embarques) {
+    int resposta;
+    do {
+        cout << endl << "Menu de Gestão de embarques:" << endl;
+        cout << "1 - Incluir" << endl;
+        cout << "2 - Excluir" << endl;
+        cout << "3 - Alterar" << endl;
+        cout << "4 - Listar" << endl;
+        cout << "5 - Localizar" << endl;
+        cout << "0 - Sair" << endl;
+        cout << "Digite a opção desejada: ";
+        cin >> resposta;
+        cout << endl;
+        switch (resposta) {
+            case 1:
+                cout << "Espaco para incluir embarque" << endl;
+                break;
+            case 2:
+                cout << "Espaco para excluir embarque" << endl;
+                break;
+            case 3:
+                cout << "Espaco para alterar embarque" << endl;
+                break;
+
+            case 4:
+                cout << "Espaco para listar embarque" << endl;
+                break;
+            case 5:
+                cout << "Espaco para localizar embarque" << endl;
+                break;
+        }
+
+    } while (resposta != 0);
+}
+
+void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros) {
+    Embarca embarque;
+    string resposta;
+
+    char cpf[12], codigo[12];
+
+    cout << "Digite o cpf do passageiro: ";
+    cin >> cpf;
+    if (!validaCPF(cpf)) {
+        cout << "CPF inválido" << endl;
+        return;
+    }
+    if (!cpfUnico(passageiros, cpf)) {
+        cout << "CPF já cadastrado" << endl;
+        return;
+    }
+
+    cout << "Digite o codigo do roteiro: ";
+    cin >> codigo;
+    if (!validaCod(codigo)) {
+        cout << "Codigo inválido" << endl;
+        return;
+    }
+    if (!codUnico(roteiros, codigo)) {
+        cout << "Codigo já cadastrado" << endl;
+        return;
+    }
+
+    cin.ignore();
+    cout << "Digite a data do embarque: ";
+    getline(cin, resposta);
+    while(!verificar_data(resposta)){
+        cout << "Data inválida, insira novamente: ";
+        getline(cin, resposta);
+    }
+    embarque.data_hora.Data = resposta;
+
+    cout << "Digite a hora do embarque: ";
+    getline(cin, resposta);
+    while(!verificar_hora(resposta)){
+        cout << "Hora inválida, insira novamente: ";
+        getline(cin, resposta);
+    }
+    embarque.data_hora.Hora = resposta;
+
+    do{
+        cout << "O embarque já aconteceu? (s/n)";
+        cin >> resposta;
+
+        if (resposta == "s") {
+            embarque.realizada = true;
+        } 
+        else if(resposta == "n"){
+            embarque.realizada = false;
+        }
+        else {
+            cout << "Resposta inválida." << endl;
+        }
+    }while (resposta != "s" && resposta != "n");
+
+    embarque.duracao = roteiros.at(buscarRoteiros(roteiros, codigo)).duracao;
+
+    embarques.push_back(embarque);
 }
