@@ -703,8 +703,8 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Codigo inválido" << endl;
         return;
     }
-    if (!codUnico(roteiros, codigo)) {
-        cout << "Codigo já cadastrado" << endl;
+    if (codUnico(roteiros, codigo)) {
+        cout << "Roteiro não cadastrado" << endl;
         return;
     }
 
