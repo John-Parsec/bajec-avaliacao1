@@ -5,48 +5,89 @@
 #include <vector>
 using namespace std;
 
-typedef struct Passageiro {
+struct Passageiro {
     char cpf[12];
     string nome;
     string dtNascimento;
-    int numAutorizacao;
-} Passageiro;
+    int numAutorizacao = 0;
+} ;
 
-typedef struct Roteiro {
-    int codigo;
-    string data_hora;
+struct data_hora{
+    string Data;
+    string Hora;
+};
+
+struct Roteiro {
+    char codigo[12];
+    data_hora Data_hora;
     int duracao;
     string origem;
     string destino;
+};
 
-} Roteiro;
+//Data e hora
+bool verificar_data(string data);
+bool verificar_dataNascimento(string data);
+bool verificar_hora(string hora);
+bool temMaisde18(string dataNasc);
 
-bool verificar_dataNascimento(string data)
-{
-    std::string a, str;
-    int ia;
-    bool valido = 1;
+//CPF e código
+bool validaCPF(char cpf[12]);
+bool cpfUnico(vector<Passageiro> passageiros, char cpf[12]);
+bool validaCod(char cod[12]);
+bool codUnico(vector<Passageiro> passageiros, char cod[12]);
 
-    str = data;
+//Passageiro
+void gestaoPassageiro(vector<Passageiro> &passageiros);
+void incluirPassageiro(vector<Passageiro> &passageiros);
+void listarPassageiros(vector<Passageiro> passageiros);
+int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]);
+void excluirPassageiro(vector<Passageiro> &passageiros, char cpf[12]);
+void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]);
 
-    if(data.size() != 10)
-    {
-        valido = 0;
-    }
-    else
-    {
-        a = str.substr(6, 4);
-        ia = stoi(a);
-    }
+//Roteiro
+void gestaoRoteiro(vector<Roteiro> &roteiros);
+void incluirRoteiro(vector<Roteiro> &roteiros);
+void listarRoteiros(vector<Roteiro> roteiros);
+int buscarRoteiros(vector<Roteiro> roteiros, char cod[12]);
+void excluirRoteiro(vector<Roteiro> &roteiros, char cod[12]);
+void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 
-    if(valido && ia > 2023)
-        valido = 0;
 
-    valido = verificar_data(str);
+int main(void) {
+    vector<Passageiro> passageiros;
+    vector<Roteiro> roteiros;
 
-    return valido;
+    int resposta;
+    do {
+        cout << endl << "Menu Geral:" << endl;
+        cout << "1 - Gestão de Passageiros" << endl;
+        cout << "2 - Gestão de Roteiros" << endl;
+        cout << "3 - Gestão de Embarque" << endl;
+        cout << "4 - Gestão de Ocorrências" << endl;
+        cout << "0 - Sair" << endl;
+        cout << "Digite a opção desejada: ";
+        cin >> resposta;
+        switch (resposta) {
+            case 1:
+                gestaoPassageiro(passageiros);
+                break;
+            case 2:
+                gestaoRoteiro(roteiros);
+                break;
+            case 3:
+                std::cout << "Espaco para gestao de embarque" << endl;
+                break;
+            case 4:
+                std::cout << "Espaco para gestao de Ocorrências" << endl;
+                break;
+        }
+    } while (resposta != 0);
+
+    return 0;
 }
 
+//Data e hora
 bool verificar_data(string data)
 {
     std::string d, m, a, str;
@@ -86,6 +127,32 @@ bool verificar_data(string data)
     return valido;
 }
 
+bool verificar_dataNascimento(string data)
+{
+    std::string a, str;
+    int ia;
+    bool valido = 1;
+
+    str = data;
+
+    if(data.size() != 10)
+    {
+        valido = 0;
+    }
+    else
+    {
+        a = str.substr(6, 4);
+        ia = stoi(a);
+    }
+
+    if(valido && ia > 2023)
+        valido = 0;
+
+    valido = verificar_data(str);
+
+    return valido;
+}
+
 bool verificar_hora(string hora)
 {
     std::string hr, min, str;
@@ -116,7 +183,22 @@ bool verificar_hora(string hora)
     return valido;
 }
 
-bool temMaisde18(string dataNasc);
+bool temMaisde18(string dataNasc) {
+    int anoNasc = stoi(dataNasc.substr(6, 4));
+    time_t dataAtual;
+    dataAtual = time(NULL);
+    struct tm separaData = *localtime(&dataAtual);
+    int anoAtual = separaData.tm_year + 1900;
+    int idade = anoAtual - anoNasc;
+    if (idade >= 18) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+//cpf e codigo
 bool validaCPF(char cpf[12]) {
     // Verifica se o CPF possui 11 dígitos
     if (strlen(cpf) != 11)
@@ -128,6 +210,7 @@ bool validaCPF(char cpf[12]) {
             return false;
     }
 
+/*
     // Converte o array de char para um array de inteiros
     int digitos[11];
     for (int i = 0; i < 11; i++) {
@@ -157,10 +240,11 @@ bool validaCPF(char cpf[12]) {
     // Verifica o segundo dígito verificador
     if (digitos[10] != segundoDigitoVerificador)
         return false;
-
+//*/
     // Se todas as verificações passaram, o CPF é válido
     return true;
 }
+
 bool cpfUnico(vector<Passageiro> passageiros, char cpf[12]) {
     for (int i = 0; i < passageiros.size(); i++) {
         if (strcmp(passageiros[i].cpf, cpf) == 0) {
@@ -170,23 +254,37 @@ bool cpfUnico(vector<Passageiro> passageiros, char cpf[12]) {
     return true;
 }
 
-void incluirPassageiro(vector<Passageiro> &passageiros);
-void listarPassageiros(vector<Passageiro> passageiros);
-int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]);
-void excluirPassageiro(vector<Passageiro> &passageiros, char cpf[12]);
-void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]);
+bool validaCod(char cod[12]) {
+    // Verifica se o codigo possui 11 dígitos
+    if (strlen(cod) != 11)
+        return false;
 
-void incluirRoteiro(vector<Roteiro> &roteiros);
-void listarRoteiros(vector<Roteiro> roteiros);
-int buscarRoteiros(vector<Roteiro> roteiros, int codigo);
-void excluirRoteiro(vector<Roteiro> &roteiros, int codigo);
-void alterarRoteiro(vector<Roteiro> &roteiros, int codigo);
+    // Verifica se todos os caracteres são dígitos numéricos
+    for (int i = 0; i < 11; i++) {
+        if (!isdigit(cod[i]))
+            return false;
+    }
 
+    // Se todas as verificações passaram, o codigo é válido
+    return true;
+}
+
+bool codUnico(vector<Roteiro> roteiros, char cod[12]) {
+    for (int i = 0; i < roteiros.size(); i++) {
+        if (strcmp(roteiros[i].codigo, cod) == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+//Passageiro
 void gestaoPassageiro(vector<Passageiro> &passageiros) {
     int resposta;
     char cpf[12];
-    cout << "Menu de Gestão de passageiros:" << endl;
+    
     do {
+        cout << endl << "Menu de Gestão de passageiros:" << endl;
         cout << "1 - Incluir" << endl;
         cout << "2 - Excluir" << endl;
         cout << "3 - Alterar (por cpf)" << endl;
@@ -195,6 +293,7 @@ void gestaoPassageiro(vector<Passageiro> &passageiros) {
         cout << "0 - Sair" << endl;
         cout << "Digite a opção desejada: ";
         cin >> resposta;
+        cout << endl;
         switch (resposta) {
             case 1:
                 incluirPassageiro(passageiros);
@@ -222,19 +321,7 @@ void gestaoPassageiro(vector<Passageiro> &passageiros) {
 
     } while (resposta != 0);
 }
-bool temMaisde18(string dataNasc) {
-    int anoNasc = stoi(dataNasc.substr(6, 4));
-    time_t dataAtual;
-    dataAtual = time(NULL);
-    struct tm separaData = *localtime(&dataAtual);
-    int anoAtual = separaData.tm_year + 1900;
-    int idade = anoAtual - anoNasc;
-    if (idade >= 18) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
 void incluirPassageiro(vector<Passageiro> &passageiros) {
     Passageiro passageiro;
     do {
@@ -248,9 +335,15 @@ void incluirPassageiro(vector<Passageiro> &passageiros) {
         }
     } while (!validaCPF(passageiro.cpf) || !cpfUnico(passageiros, passageiro.cpf));
     cout << "Digite o nome do passageiro: ";
-    cin >> passageiro.nome;
+    getline(cin >> ws, passageiro.nome);
     cout << "Digite a data de nascimento do passageiro: ";
     cin >> passageiro.dtNascimento;
+    while(!verificar_dataNascimento(passageiro.dtNascimento))
+    {
+        std::cout << "Data de nascimento inválida, insira novamente: ";
+        cin >> passageiro.dtNascimento;
+    }
+
     
     if (!temMaisde18(passageiro.dtNascimento)) {
         cout << "Digite o numero de autorização do passageiro: ";
@@ -260,6 +353,7 @@ void incluirPassageiro(vector<Passageiro> &passageiros) {
     }
     passageiros.push_back(passageiro);
 }
+
 void listarPassageiros(vector<Passageiro> passageiros) {
     if (passageiros.size() == 0) {
         cout << "Não há passageiros cadastrados" << endl;
@@ -275,6 +369,7 @@ void listarPassageiros(vector<Passageiro> passageiros) {
         cout << endl;
     }
 }
+
 int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]) {
     if (passageiros.size() == 0) {
         cout << "Não há passageiros cadastrados" << endl;
@@ -293,6 +388,7 @@ int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]) {
     cout << "Passageiro não encontrado" << endl;
     return -1;
 }
+
 void excluirPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     if (passageiros.size() == 0) {
         cout << "Não há passageiros cadastrados" << endl;
@@ -307,6 +403,7 @@ void excluirPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     }
     cout << "Passageiro não encontrado" << endl;
 }
+
 void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     int posicao = buscarPassageiros(passageiros, cpf);
     string resposta;
@@ -317,7 +414,7 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     cin >> resposta;
     if (resposta == "s") {
         cout << "Digite o novo nome: ";
-        cin >> resposta;
+        getline(cin >> ws, resposta);
         passageiros.at(posicao).nome = resposta;
     }
 
@@ -326,6 +423,12 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     if (resposta == "s") {
         cout << "Digite a nova data de nascimento: ";
         cin >> resposta;
+        while(!verificar_dataNascimento(resposta))
+        {
+            std::cout << "Data de nascimento inválida, insira novamente: ";
+            cin >> resposta;
+        }
+
         passageiros.at(posicao).dtNascimento = resposta;
     }
     if (!temMaisde18(passageiros.at(posicao).dtNascimento)) {
@@ -342,12 +445,13 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12]) {
     }
 }
 
-// Roteiro
+//Roteiro
 void gestaoRoteiro(vector<Roteiro> &roteiros) {
     int resposta;
-    int codigo;
-    cout << "Menu de Gestão de roteiros:" << endl;
+    char codigo[12];
     do {
+        codigo[12] = {0};
+        cout << endl << "Menu de Gestão de roteiros:" << endl;
         cout << "1 - Incluir" << endl;
         cout << "2 - Excluir" << endl;
         cout << "3 - Alterar (por codigo)" << endl;
@@ -356,6 +460,7 @@ void gestaoRoteiro(vector<Roteiro> &roteiros) {
         cout << "0 - Sair" << endl;
         cout << "Digite a opção desejada: ";
         cin >> resposta;
+        cout << endl;
         switch (resposta) {
             case 1:
                 incluirRoteiro(roteiros);
@@ -383,51 +488,82 @@ void gestaoRoteiro(vector<Roteiro> &roteiros) {
 
     } while (resposta != 0);
 }
+
 void incluirRoteiro(vector<Roteiro> &roteiros) {
     Roteiro roteiro;
     string resposta;
-    cout << "Digite o codigo do roteiro: ";
-    cin >> roteiro.codigo;
+    do {
+        cout << "Digite o codigo do roteiro: ";
+        cin >> roteiro.codigo;
+        if (!validaCod(roteiro.codigo)) {
+            cout << "CPF inválido" << endl;
+        }
+        if (!codUnico(roteiros, roteiro.codigo)) {
+            cout << "CPF já cadastrado" << endl;
+        }
+    } while (!validaCod(roteiro.codigo) || !codUnico(roteiros, roteiro.codigo));
+
     cin.ignore();
-    cout << "Digite a data e hora prevista: ";
+    cout << "Digite a data prevista: ";
     getline(cin, resposta);
-    roteiro.data_hora = resposta;
+    while(!verificar_data(resposta))
+    {
+        cout << "Data inválida, insira novamente: ";
+        cin >> (resposta);
+    }
+    roteiro.Data_hora.Data = resposta;
+
+    cout << "Digite a Hora prevista: ";
+    getline(cin, resposta);
+    while(!verificar_hora(resposta))
+    {
+        cout << "Hora inválida, insira novamente: ";
+        cin >> (resposta);
+    }
+    roteiro.Data_hora.Hora = resposta;
+
+    
     cout << "Digite a duracao do roteiro: ";
     cin >> roteiro.duracao;
     cin.ignore();
     cout << "Digite a origem do roteiro: ";
-    getline(cin, resposta);
+    getline(cin >> ws, resposta);
     roteiro.origem = resposta;
     cout << "Digite o destino do roteiro: ";
-    getline(cin, resposta);
+    getline(cin >> ws, resposta);
     roteiro.destino = resposta;
 
     roteiros.push_back(roteiro);
 }
+
 void listarRoteiros(vector<Roteiro> roteiros) {
     if (roteiros.size() == 0) {
         cout << "Não há roteiros cadastrados" << endl;
         return;
     }
-    cout << "Codigo\tData e Hora\tDuracao\tOrigem\tDestino" << endl;
+    cout << "Codigo\tData\tHora\tDuracao\tOrigem\tDestino" << endl;
     for (int i = 0; i < roteiros.size(); i++) {
         cout << roteiros[i].codigo << "\t";
-        cout << roteiros[i].data_hora << "\t";
+        cout << roteiros[i].Data_hora.Data << "\t";
+        cout << roteiros[i].Data_hora.Hora << "\t";
         cout << roteiros[i].duracao << "\t";
         cout << roteiros[i].origem << "\t";
         cout << roteiros[i].destino << "\t";
         cout << endl;
     }
 }
-int buscarRoteiros(vector<Roteiro> roteiros, int codigo) {
+
+int buscarRoteiros(vector<Roteiro> roteiros, char codigo[12]) {
     if (roteiros.size() == 0) {
         cout << "Não há roteiros cadastrados" << endl;
         return -1;
     }
     for (int i = 0; i < roteiros.size(); i++) {
-        if (roteiros[i].codigo == codigo) {
+        std::cout << roteiros[i].codigo << " - " << codigo;
+        if (strcmp(roteiros[i].codigo, codigo) == 0) {
             cout << "Codigo: " << roteiros[i].codigo << endl;
-            cout << "Data e Hora: " << roteiros[i].data_hora << endl;
+            cout << "Data: " << roteiros[i].Data_hora.Data << endl;
+            cout << "Hora: " << roteiros[i].Data_hora.Hora << endl;
             cout << "Duracao: " << roteiros[i].duracao << endl;
             cout << "Origem: " << roteiros[i].origem << endl;
             cout << "Destino: " << roteiros[i].destino << endl;
@@ -437,13 +573,15 @@ int buscarRoteiros(vector<Roteiro> roteiros, int codigo) {
     cout << "Roteiro não encontrado" << endl;
     return -1;
 }
-void excluirRoteiro(vector<Roteiro> &roteiros, int codigo) {
+
+void excluirRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
     if (roteiros.size() == 0) {
         cout << "Não há roteiros cadastrados" << endl;
         return;
     }
     for (auto x = roteiros.begin(); x != roteiros.end(); x++) {
-        if (x->codigo == codigo) {
+        std::cout << "AAAAAAAAAAAAAAAAAAAAAA";
+        if (strcmp(x->codigo, codigo) == 0) {
             roteiros.erase(x);
             cout << "Roteiro excluido com sucesso" << endl;
             return;
@@ -451,18 +589,27 @@ void excluirRoteiro(vector<Roteiro> &roteiros, int codigo) {
     }
     cout << "Roteiro não encontrado" << endl;
 }
-void alterarRoteiro(vector<Roteiro> &roteiros, int codigo) {
+
+void alterarRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
     int posicao = buscarRoteiros(roteiros, codigo);
     string resposta;
     if (posicao == -1) {
         return;
     }
-    cout << "Deseja alterar a data e hora? (s/n)";
+    cout << "Deseja alterar a data? (s/n)";
     cin >> resposta;
     if (resposta == "s") {
-        cout << "Digite a nova data e hora: ";
+        cout << "Digite a nova data: ";
         cin >> resposta;
-        roteiros.at(posicao).data_hora = resposta;
+        roteiros.at(posicao).Data_hora.Data = resposta;
+    }
+
+    cout << "Deseja alterar a hora? (s/n)";
+    cin >> resposta;
+    if (resposta == "s") {
+        cout << "Digite a nova hora: ";
+        cin >> resposta;
+        roteiros.at(posicao).Data_hora.Hora = resposta;
     }
 
     cout << "Deseja alterar a duracao? (s/n)";
@@ -477,7 +624,7 @@ void alterarRoteiro(vector<Roteiro> &roteiros, int codigo) {
     cin >> resposta;
     if (resposta == "s") {
         cout << "Digite a nova origem: ";
-        cin >> resposta;
+        getline(cin >> ws, resposta);
         roteiros.at(posicao).origem = resposta;
     }
 
@@ -485,33 +632,7 @@ void alterarRoteiro(vector<Roteiro> &roteiros, int codigo) {
     cin >> resposta;
     if (resposta == "s") {
         cout << "Digite o novo destino: ";
-        cin >> resposta;
+        getline(cin >> ws, resposta);
         roteiros.at(posicao).destino = resposta;
     }
-}
-
-int main(void) {
-    vector<Passageiro> passageiros;
-    vector<Roteiro> roteiros;
-
-    int resposta;
-    cout << "Menu de Geral:" << endl;
-
-    do {
-        cout << "1 - Gestão de Passageiros" << endl;
-        cout << "2 - Gestão de Roteiros" << endl;
-        cout << "0 - Sair" << endl;
-        cout << "Digite a opção desejada: ";
-        cin >> resposta;
-        switch (resposta) {
-            case 1:
-                gestaoPassageiro(passageiros);
-                break;
-            case 2:
-                gestaoRoteiro(roteiros);
-                break;
-        }
-    } while (resposta != 0);
-
-    return 0;
 }
