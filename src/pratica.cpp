@@ -29,7 +29,9 @@ struct Roteiro {
 struct Embarca {
     bool realizada;
     int duracao;
-    data_hora data_hora;
+    data_hora dt_hora;
+    char passageiroCPF[12];
+    char roteiroCodigo[12];
 };
 
 //Data e hora
@@ -697,10 +699,12 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "CPF inválido" << endl;
         return;
     }
-    if (!cpfUnico(passageiros, cpf)) {
-        cout << "CPF já cadastrado" << endl;
+    if (cpfUnico(passageiros, cpf)) {
+        cout << "Passageiro não cadastrado" << endl;
         return;
     }
+
+    strcpy(embarque.passageiroCPF, cpf);
 
     cout << "Digite o codigo do roteiro: ";
     cin >> codigo;
@@ -708,10 +712,12 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Codigo inválido" << endl;
         return;
     }
-    if (!codUnico(roteiros, codigo)) {
-        cout << "Codigo já cadastrado" << endl;
+    if (codUnico(roteiros, codigo)) {
+        cout << "Codigo não cadastrado" << endl;
         return;
     }
+
+    strcpy(embarque.roteiroCodigo, codigo);
 
     cin.ignore();
     cout << "Digite a data do embarque: ";
@@ -720,7 +726,7 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Data inválida, insira novamente: ";
         getline(cin, resposta);
     }
-    embarque.data_hora.Data = resposta;
+    embarque.dt_hora.Data = resposta;
 
     cout << "Digite a hora do embarque: ";
     getline(cin, resposta);
@@ -728,7 +734,7 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Hora inválida, insira novamente: ";
         getline(cin, resposta);
     }
-    embarque.data_hora.Hora = resposta;
+    embarque.dt_hora.Hora = resposta;
 
     do{
         cout << "O embarque já aconteceu? (s/n)";
