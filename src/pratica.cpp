@@ -44,7 +44,7 @@ bool temMaisde18(string dataNasc);
 bool validaCPF(char cpf[12]);
 bool cpfUnico(vector<Passageiro> passageiros, char cpf[12]);
 bool validaCod(char cod[12]);
-bool codUnico(vector<Passageiro> passageiros, char cod[12]);
+bool codUnico(vector<Roteiro> roteiros, char cod[12]);
 
 //Passageiro
 void gestaoPassageiro(vector<Passageiro> &passageiros);
@@ -65,7 +65,9 @@ void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 //Embarque
 void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
+void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void listarEmbarques(vector<Embarca> embarques);
+/*void listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);*/
 
 int main(void) {
     vector<Passageiro> passageiros;
@@ -751,6 +753,15 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
     embarques.push_back(embarque);
 }
 
+void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros){
+    string codigo;
+    if(embarques.size() != 0){
+        cout << "Digite codigo do Roteiro: ";
+        cin >> codigo;
+    }else
+        cout << "Não há nenhum embarque registrado.\n";
+}
+
 void listarEmbarques(vector<Embarca> embarques) {
     if (embarques.size() == 0) {
         cout << "Não há embarques cadastrados" << endl;
@@ -765,3 +776,5 @@ void listarEmbarques(vector<Embarca> embarques) {
         cout << endl;
     }
 }
+
+//void listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros)
