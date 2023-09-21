@@ -51,7 +51,7 @@ bool temMaisde18(string dataNasc);
 bool validaCPF(char cpf[12]);
 bool cpfUnico(vector<Passageiro> passageiros, char cpf[12]);
 bool validaCod(char cod[12]);
-bool codUnico(vector<Passageiro> passageiros, char cod[12]);
+bool codUnico(vector<Roteiro> roteiros, char cod[12]);
 
 //Passageiro
 void gestaoPassageiro(vector<Passageiro> &passageiros);
@@ -72,7 +72,10 @@ void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 //Embarque
 void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
+void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
+int buscarEmbarque(vector<Embarca> &embarques, char cpf[12], char cod[12]);
 void listarEmbarques(vector<Embarca> embarques);
+vector<Passageiro> listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]);
 
 //Ocorrência
 void gestaoOcorrencia(vector<Ocorrencia> &Ocorrencias, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
@@ -402,11 +405,12 @@ int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]) {
     }
     for (int i = 0; i < passageiros.size(); i++) {
         if (strcmp(passageiros[i].cpf, cpf) == 0) {
-            cout << "CPF: " << passageiros[i].cpf << endl;
-            cout << "Nome: " << passageiros[i].nome << endl;
-            cout << "Data de Nascimento: " << passageiros[i].dtNascimento << endl;
+            cout << "CPF: " << passageiros[i].cpf;
+            cout << " | Nome: " << passageiros[i].nome;
+            cout << " | Data de Nascimento: " << passageiros[i].dtNascimento;
             if (passageiros[i].numAutorizacao != -1)
-                cout << "Numero de Autorização: " << passageiros[i].numAutorizacao << endl;
+                cout << " | Numero de Autorização: " << passageiros[i].numAutorizacao;
+            cout << endl;
             return i;
         }
     }
@@ -683,7 +687,7 @@ void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, 
                 cout << "Espaco para excluir embarque" << endl;
                 break;
             case 3:
-                cout << "Espaco para alterar embarque" << endl;
+                alterarEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
                 listarEmbarques(embarques);
@@ -762,21 +766,99 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
     embarques.push_back(embarque);
 }
 
+void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros){
+    char cod[12], cpf[12];
+    vector<Passageiro> listPass;
+    bool valID, unicoID;
+    int duracao, posicao;
+
+    // se nao existir embarques nao se pode fazer alterações
+    if(embarques.size() != 0){
+
+        // solicita codigo de roteiro e verifica ele existe
+        do{
+            cout << "Digite codigo do Roteiro: ";
+            cin >> cod;
+            valID = validaCod(cod);
+            unicoID = codUnico(roteiros, cod);
+            if(!valID)
+                cout << "Codigo inválido." << endl;
+            else if(unicoID)
+                cout << "Codigo nao cadastrado." << endl;
+        }while(!valID || unicoID);
+
+        // cria um vetor com os passageiros que embarcaram no roteiro
+        listPass = listarPassageirosEmbarque(embarques, passageiros, cod);
+
+        // solicita cpf que esteja presente na lista de passageiros do roteiro
+        do{
+            cout << "Digite CPF do Passageiro: ";
+            cin >> cpf;
+            valID = validaCPF(cpf);
+            unicoID = cpfUnico(listPass, cpf);
+            if(!valID)
+                cout << "CPF inválido." << endl;
+            else if(unicoID)
+                cout << "CPF nao cadastrado." << endl;
+        }while(!valID || unicoID);
+
+        // busca posicao de registro de embarque
+        posicao = buscarEmbarque(embarques, cpf, cod);
+
+        // so eh possivel modificar duração de embarque se viagem ja aconteceu
+        if(embarques[posicao].realizada){
+            cout << "Duracao real (min): ";
+            cin >> duracao;
+            embarques[posicao].duracao = duracao;
+            cout << "Duracao alterada com sucesso." << endl;
+        }else{
+            cout << "Embarque ainda nao aconteceu, não é possivel editar duracao.";
+        }
+        
+    }else
+        cout << "Não há nenhum embarque registrado.\n";
+}
+
+int buscarEmbarque(vector<Embarca> &embarques, char cpf[12], char cod[12]){
+    int i;
+
+    // procura no vector de embarque um registro com cpf e codigo correspondentes
+    for(i = 0; i < embarques.size(); i++){
+        if(strcmp(embarques[i].passageiroCPF, cpf) == 0 && strcmp(embarques[i].roteiroCodigo, cod) == 0)
+            return i;
+    }
+    return -1;
+}
+
 void listarEmbarques(vector<Embarca> embarques) {
     if (embarques.size() == 0) {
         cout << "Não há embarques cadastrados" << endl;
         return;
     }
-    cout << "CPF\tCodigo\tData\tHora\tDuracao\tRealizada" << endl;
+    cout << "Data\tHora\tDuracao\tRealizada" << endl;
     for (int i = 0; i < embarques.size(); i++) {
         cout << embarques[i].dt_hora.Data << "\t";
         cout << embarques[i].dt_hora.Hora << "\t";
         cout << embarques[i].duracao << "\t";
-        cout << embarques[i].realizada << "\t";
+        cout << ((embarques[i].realizada)? "Sim": "Nao") << "\t";
         cout << endl;
     }
 }
 
+vector<Passageiro> listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]){
+    vector<Passageiro> listarPassageiros;
+    int i;
+
+    // percorre o vetor de embarque e verifica quais embarques sao do codigo de roteiro
+    for(i = 0; i < embarques.size(); i++){
+        if(strcmp(embarques[i].roteiroCodigo, codRoterio) == 0){
+            // coloca no vetor de lista os passageiros que embarcaram no roteiro
+            // como embarca so é inicializado com passageiros e roteiros cadastrados nao é preciso fazer verificao de existencia
+            listarPassageiros.push_back(passageiros[buscarPassageiros(passageiros, embarques[i].passageiroCPF)]);
+        }
+    }
+    return listarPassageiros;
+}
 //Ocorrência
 void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros){
     int resposta;
