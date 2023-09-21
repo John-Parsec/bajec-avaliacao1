@@ -29,7 +29,7 @@ struct Roteiro {
 struct Embarca {
     bool realizada;
     int duracao;
-    data_hora data_hora;
+    data_hora dt_hora;
 };
 
 //Data e hora
@@ -507,10 +507,10 @@ void incluirRoteiro(vector<Roteiro> &roteiros) {
         cout << "Digite o codigo do roteiro: ";
         cin >> roteiro.codigo;
         if (!validaCod(roteiro.codigo)) {
-            cout << "CPF inválido" << endl;
+            cout << "Codigo inválido" << endl;
         }
         if (!codUnico(roteiros, roteiro.codigo)) {
-            cout << "CPF já cadastrado" << endl;
+            cout << "Codigo já cadastrado" << endl;
         }
     } while (!validaCod(roteiro.codigo) || !codUnico(roteiros, roteiro.codigo));
 
@@ -692,8 +692,8 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "CPF inválido" << endl;
         return;
     }
-    if (!cpfUnico(passageiros, cpf)) {
-        cout << "CPF já cadastrado" << endl;
+    if (cpfUnico(passageiros, cpf)) {
+        cout << "Passageiro não cadastrado" << endl;
         return;
     }
 
@@ -715,7 +715,7 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Data inválida, insira novamente: ";
         getline(cin, resposta);
     }
-    embarque.data_hora.Data = resposta;
+    embarque.dt_hora.Data = resposta;
 
     cout << "Digite a hora do embarque: ";
     getline(cin, resposta);
@@ -723,7 +723,7 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "Hora inválida, insira novamente: ";
         getline(cin, resposta);
     }
-    embarque.data_hora.Hora = resposta;
+    embarque.dt_hora.Hora = resposta;
 
     do{
         cout << "O embarque já aconteceu? (s/n)";
@@ -752,8 +752,8 @@ void listarEmbarques(vector<Embarca> embarques) {
     }
     cout << "CPF\tCodigo\tData\tHora\tDuracao\tRealizada" << endl;
     for (int i = 0; i < embarques.size(); i++) {
-        cout << embarques[i].data_hora.Data << "\t";
-        cout << embarques[i].data_hora.Hora << "\t";
+        cout << embarques[i].dt_hora.Data << "\t";
+        cout << embarques[i].dt_hora.Hora << "\t";
         cout << embarques[i].duracao << "\t";
         cout << embarques[i].realizada << "\t";
         cout << endl;
