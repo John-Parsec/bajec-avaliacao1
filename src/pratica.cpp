@@ -756,12 +756,12 @@ void listarEmbarques(vector<Embarca> embarques) {
         cout << "Não há embarques cadastrados" << endl;
         return;
     }
-    cout << "CPF\tCodigo\tData\tHora\tDuracao\tRealizada" << endl;
+    cout << "Data\tHora\tDuracao\tRealizada" << endl;
     for (int i = 0; i < embarques.size(); i++) {
         cout << embarques[i].dt_hora.Data << "\t";
         cout << embarques[i].dt_hora.Hora << "\t";
         cout << embarques[i].duracao << "\t";
-        cout << embarques[i].realizada << "\t";
+        cout << ((embarques[i].realizada)? "Sim": "Nao") << "\t";
         cout << endl;
     }
 }
