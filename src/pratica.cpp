@@ -66,9 +66,9 @@ void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
-int buscarEmbarque(vector<Embarca> %embarques, char cpf[12], char cod[12]);
+int buscarEmbarque(vector<Embarca> &embarques, char cpf[12], char cod[12]);
 void listarEmbarques(vector<Embarca> embarques);
-void listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]);
+vector<Passageiro> listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]);
 
 int main(void) {
     vector<Passageiro> passageiros;
@@ -675,7 +675,7 @@ void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, 
                 cout << "Espaco para excluir embarque" << endl;
                 break;
             case 3:
-                cout << "Espaco para alterar embarque" << endl;
+                alterarEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
                 listarEmbarques(embarques);
@@ -783,7 +783,7 @@ void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
             cout << "Digite CPF do Passageiro: ";
             cin >> cpf;
             valID = validaCPF(cpf);
-            unicoID = codUnico(listPass, cpf);
+            unicoID = cpfUnico(listPass, cpf);
             if(!valID)
                 cout << "CPF inválido." << endl;
             else if(unicoID)
@@ -791,7 +791,7 @@ void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         }while(!valID || unicoID);
 
         // busca posicao de registro de embarque
-        posicao = buscarRoteiros(embarques, cpf, cod);
+        posicao = buscarEmbarque(embarques, cpf, cod);
 
         // so eh possivel modificar duração de embarque se viagem ja aconteceu
         if(embarques[posicao].realizada){
@@ -800,7 +800,7 @@ void alterarEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
             embarques[posicao].duracao = duracao;
             cout << "Duracao alterada com sucesso." << endl;
         }else{
-            cout << "Embarque ainda nao aconteceu, não é possivel editar duracao."
+            cout << "Embarque ainda nao aconteceu, não é possivel editar duracao.";
         }
         
     }else
@@ -833,8 +833,8 @@ void listarEmbarques(vector<Embarca> embarques) {
     }
 }
 
-void listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]){
-    vector<Passageiros> listarPassageiros;
+vector<Passageiro> listarPassageirosEmbarque(vector<Embarca> embarques, vector<Passageiro> passageiros, char codRoterio[12]){
+    vector<Passageiro> listarPassageiros;
     int i;
 
     // percorre o vetor de embarque e verifica quais embarques sao do codigo de roteiro
