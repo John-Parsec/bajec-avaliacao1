@@ -83,7 +83,6 @@ int main(void) {
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
     vector<Embarca> embarques;
-    vector<Ocorrencia> ocorrencias;
 
     int resposta;
     do {
@@ -106,7 +105,7 @@ int main(void) {
                 gestaoEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
-                gestaoOcorrencia(ocorrencias, passageiros, roteiros);
+                gestaoOcorrencia(embarques, passageiros, roteiros);
                 break;
         }
     } while (resposta != 0);
@@ -779,7 +778,7 @@ void listarEmbarques(vector<Embarca> embarques) {
 }
 
 //Ocorrência
-void gestaoOcorrencia(vector<Ocorrencia> &ocorrencias, vector<Passageiro> passageiros, vector<Roteiro> roteiros){
+void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros){
     int resposta;
 
     do{
@@ -794,7 +793,7 @@ void gestaoOcorrencia(vector<Ocorrencia> &ocorrencias, vector<Passageiro> passag
         cout << endl;
         switch (resposta) {
             case 1:
-                incluirOcorrencia(ocorrencias);
+                incluirOcorrencia(embarques);
                 break;
             case 2:
                 cout << "Espaco para excluir ocorrencia" << endl;
