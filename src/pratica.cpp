@@ -82,7 +82,6 @@ int main(void) {
     vector<Passageiro> passageiros;
     vector<Roteiro> roteiros;
     vector<Embarca> embarques;
-    vector<Ocorrencia> ocorrencias;
 
     int resposta;
     do {
@@ -105,7 +104,7 @@ int main(void) {
                 gestaoEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
-                gestaoOcorrencia(ocorrencias);
+                gestaoOcorrencia(embarques);
                 break;
         }
     } while (resposta != 0);
@@ -784,7 +783,7 @@ void listarEmbarques(vector<Embarca> embarques) {
 
 
 //Ocorrência
-void gestaoOcorrencia(vector<Ocorrencia> &embarques){
+void gestaoOcorrencia(vector<Embarca> &embarques){
     int resposta;
 
     do{
