@@ -30,6 +30,8 @@ struct Embarca {
     bool realizada;
     int duracao;
     data_hora dt_hora;
+    char passageiroCPF[12];
+    char roteiroCodigo[12];
 };
 
 //Data e hora
@@ -697,6 +699,8 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         return;
     }
 
+    strcpy(embarque.passageiroCPF, cpf);
+
     cout << "Digite o codigo do roteiro: ";
     cin >> codigo;
     if (!validaCod(codigo)) {
@@ -704,9 +708,11 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         return;
     }
     if (codUnico(roteiros, codigo)) {
-        cout << "Roteiro não cadastrado" << endl;
+        cout << "Codigo não cadastrado" << endl;
         return;
     }
+
+    strcpy(embarque.roteiroCodigo, codigo);
 
     cin.ignore();
     cout << "Digite a data do embarque: ";
