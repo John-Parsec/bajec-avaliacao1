@@ -393,11 +393,12 @@ int buscarPassageiros(vector<Passageiro> passageiros, char cpf[12]) {
     }
     for (int i = 0; i < passageiros.size(); i++) {
         if (strcmp(passageiros[i].cpf, cpf) == 0) {
-            cout << "CPF: " << passageiros[i].cpf << endl;
-            cout << "Nome: " << passageiros[i].nome << endl;
-            cout << "Data de Nascimento: " << passageiros[i].dtNascimento << endl;
+            cout << "CPF: " << passageiros[i].cpf;
+            cout << " | Nome: " << passageiros[i].nome;
+            cout << " | Data de Nascimento: " << passageiros[i].dtNascimento;
             if (passageiros[i].numAutorizacao != -1)
-                cout << "Numero de Autorização: " << passageiros[i].numAutorizacao << endl;
+                cout << " | Numero de Autorização: " << passageiros[i].numAutorizacao;
+            cout << endl;
             return i;
         }
     }
