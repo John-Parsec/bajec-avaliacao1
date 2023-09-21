@@ -61,8 +61,9 @@ void excluirRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 void alterarRoteiro(vector<Roteiro> &roteiros, char cod[12]);
 
 //Embarque
-void gestaoEmbarque(vector<Embarca> &embarques);
+void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
+void listarEmbarques(vector<Embarca> embarques);
 
 int main(void) {
     vector<Passageiro> passageiros;
@@ -87,7 +88,7 @@ int main(void) {
                 gestaoRoteiro(roteiros);
                 break;
             case 3:
-                gestaoEmbarque(embarques);
+                gestaoEmbarque(embarques, passageiros, roteiros);
                 break;
             case 4:
                 cout << "Espaco para gestao de Ocorrências" << endl;
@@ -207,7 +208,6 @@ bool temMaisde18(string dataNasc) {
         return false;
     }
 }
-
 
 //cpf e codigo
 bool validaCPF(char cpf[12]) {
@@ -650,7 +650,7 @@ void alterarRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
 
 
 //Embarque
-void gestaoEmbarque(vector<Embarca> &embarques) {
+void gestaoEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros) {
     int resposta;
     do {
         cout << endl << "Menu de Gestão de embarques:" << endl;
@@ -658,14 +658,13 @@ void gestaoEmbarque(vector<Embarca> &embarques) {
         cout << "2 - Excluir" << endl;
         cout << "3 - Alterar" << endl;
         cout << "4 - Listar" << endl;
-        cout << "5 - Localizar" << endl;
         cout << "0 - Sair" << endl;
         cout << "Digite a opção desejada: ";
         cin >> resposta;
         cout << endl;
         switch (resposta) {
             case 1:
-                cout << "Espaco para incluir embarque" << endl;
+                incluirEmbarque(embarques, passageiros, roteiros);
                 break;
             case 2:
                 cout << "Espaco para excluir embarque" << endl;
@@ -673,12 +672,8 @@ void gestaoEmbarque(vector<Embarca> &embarques) {
             case 3:
                 cout << "Espaco para alterar embarque" << endl;
                 break;
-
             case 4:
-                cout << "Espaco para listar embarque" << endl;
-                break;
-            case 5:
-                cout << "Espaco para localizar embarque" << endl;
+                listarEmbarques(embarques);
                 break;
         }
 
@@ -748,4 +743,19 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
     embarque.duracao = roteiros.at(buscarRoteiros(roteiros, codigo)).duracao;
 
     embarques.push_back(embarque);
+}
+
+void listarEmbarques(vector<Embarca> embarques) {
+    if (embarques.size() == 0) {
+        cout << "Não há embarques cadastrados" << endl;
+        return;
+    }
+    cout << "CPF\tCodigo\tData\tHora\tDuracao\tRealizada" << endl;
+    for (int i = 0; i < embarques.size(); i++) {
+        cout << embarques[i].data_hora.Data << "\t";
+        cout << embarques[i].data_hora.Hora << "\t";
+        cout << embarques[i].duracao << "\t";
+        cout << embarques[i].realizada << "\t";
+        cout << endl;
+    }
 }
