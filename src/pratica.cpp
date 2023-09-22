@@ -92,7 +92,9 @@ void listarEmbarquesPassageiro(vector<Embarca> &vecResult, vector<Embarca> embar
 void listarOcorrenciasRoteiro(vector<Embarca> &embarques);
 void listarOcorroencias(vector<Embarca> embarques);
 void alterarOcorrencia(vector<Embarca> &embarques);
+void registrarOcorrenciaRoteiro(vector<Embarca> &embarques, vector<Roteiro> &roteiros);
 void excluirOcorrencia(vector<Embarca> &embarques);
+
 
 int main(void){
     vector<Passageiro> passageiros;
@@ -1030,6 +1032,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "3 - Alterar" << endl;
         cout << "4 - Listar por passageiro" << endl;
         cout << "5 - Listar por Roteiro" << endl;
+        cout << "6 - Registrar por roteiro" << endl;
         cout << "0 - Sair" << endl;
         cout << "Digite a opção desejada: ";
         cin >> resposta;
@@ -1049,6 +1052,9 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
                 break;
             case 5:
                 listarOcorrenciasRoteiro(embarques);
+                break;
+            case 6:
+                registrarOcorrenciaRoteiro(embarques, roteiros);    
         }
     } while (resposta != 0);
 }
@@ -1284,7 +1290,6 @@ void alterarOcorrencia(vector<Embarca> &embarques){
 void excluirOcorrencia(vector<Embarca> &embarques){
     char cpf[12], codigo[12];
     bool achou = false;
-    //colocar aqui listagem de ocorrencias
     cout << "Digite o cpf do passageiro (Apenas 11 numeros): ";
     cin >> cpf;
 
@@ -1308,4 +1313,65 @@ void excluirOcorrencia(vector<Embarca> &embarques){
     else{
         cout << "Embarque não encontrado" << endl;
     }
+}
+
+void registrarOcorrenciaRoteiro(vector<Embarca> &embarques, vector<Roteiro> &roteiros){
+
+    Ocorrencia ocorrencia;
+    Roteiro roteiro;
+    string resposta;
+    char codigo[12];
+    bool achou = false;
+    cout << "Digite o codigo do roteiro (Apenas 11 numeros): ";
+    cin >> codigo;
+
+    for (int i = 0; i < roteiros.size(); i++) {
+        if (strcmp(roteiros[i].codigo, codigo) == 0) {
+            roteiro = roteiros[i];
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "Roteiro não encontrado" << endl;
+        return ;
+    }
+
+    cout << "Data: " << roteiro.Data_hora.Data << endl;
+    cout << "Hora: " << roteiro.Data_hora.Hora << endl;
+    cout << "Duracao: " << roteiro.duracao << endl;
+    cout << "Origem: " << roteiro.origem << endl;
+    cout << "Destino: " << roteiro.destino << endl << endl;
+
+    
+    cout << "Digite a descrição da ocorrência: ";
+    getline(cin >> ws, ocorrencia.descricao);
+
+    cout << "Digite a data da ocorrência:(dd/mm/aaaa) ";
+    getline(cin >> ws, resposta);
+    while(!verificar_data(resposta)){
+        cout << "Data inválida, insira novamente:(dd/mm/aaaa) ";
+        getline(cin >> ws, resposta);
+    }
+    ocorrencia.dt_hora.Data = resposta;
+
+    cout << "Digite a hora da ocorrência:(hh:mm) ";
+    getline(cin >> ws, resposta);
+    while(!verificar_hora(resposta)){
+        cout << "Hora inválida, insira novamente:(hh:mm) ";
+        getline(cin >> ws, resposta);
+    }
+    ocorrencia.dt_hora.Hora = resposta;
+
+    cout << "Digite o número da apólice: ";
+    cin >> ocorrencia.numApolice;    
+
+    for (int i = 0; i < embarques.size(); i++) {
+        if (strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
+            embarques[i].ocorrencia = ocorrencia;
+        }
+    }
+
+    cout << "Ocorrência por roteiro registrada com sucesso" << endl;
 }
