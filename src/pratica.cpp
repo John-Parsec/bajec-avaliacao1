@@ -858,7 +858,8 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         }
     } while (resposta != "s" && resposta != "n");
 
-    embarque.duracao = roteiros.at(buscarRoteiros(roteiros, codigo)).duracao;
+    cout << "Digite a duracao real do embarque:(Apenas numeros) ";
+    cin >> embarque.duracao;
 
     embarques.push_back(embarque);
 }
