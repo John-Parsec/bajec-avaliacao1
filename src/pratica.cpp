@@ -86,7 +86,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
 // Ocorrência
 void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirOcorrencia(vector<Embarca> &embarques);
-void listarOcorrenciasRoteiro(vector<Embarca> &embarques, vector<Roteiro> roteiros);
+void listarOcorrenciasRoteiro(vector<Embarca> &embarques);
 void alterarOcorrencia(vector<Embarca> &embarques);
 
 int main(void){
@@ -1019,6 +1019,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
         cout << "2 - Excluir" << endl;
         cout << "3 - Alterar" << endl;
         cout << "4 - Listar por passageiro" << endl;
+        cout << "5 - Listar por Roteiro" << endl;
         cout << "0 - Sair" << endl;
         cout << "Digite a opção desejada: ";
         cin >> resposta;
@@ -1037,7 +1038,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
                 cout << "Espaco para listar por passageiro ocorrencia" << endl;
                 break;
             case 5:
-                listarOcorrenciasRoteiro(embarques, roteiros);
+                listarOcorrenciasRoteiro(embarques);
         }
     } while (resposta != 0);
 }
@@ -1089,7 +1090,7 @@ void incluirOcorrencia(vector<Embarca> &embarques){
     }
 }
 
-void listarOcorrenciasRoteiro(vector<Embarca> &embarques, vector<Roteiro> roteiros){
+void listarOcorrenciasRoteiro(vector<Embarca> &embarques){
     string resposta;
     char codigo[12];
     bool achou = false;
