@@ -1036,8 +1036,8 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
             case 4:
                 cout << "Espaco para listar por passageiro ocorrencia" << endl;
                 break;
-            /*case 5:
-                listarOcorrenciasRoteiro(embarques, roteiros);*/
+            case 5:
+                listarOcorrenciasRoteiro(embarques, roteiros);
         }
     } while (resposta != 0);
 }
@@ -1089,9 +1089,30 @@ void incluirOcorrencia(vector<Embarca> &embarques){
     }
 }
 
-/*void listarOcorrenciasRoteiro(vec, vector<Roteiro> roteiros){
+void listarOcorrenciasRoteiro(vector<Embarca> &embarques, vector<Roteiro> roteiros){
+    string resposta;
+    char codigo[12];
+    bool achou = false;
 
-}*/
+    cout << "Digite o codigo do roteiro: ";
+    cin >> codigo;
+
+    for (int i = 0; i < embarques.size(); i++) {
+        if (strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
+            cout << "CPF: " << embarques[i].passageiroCPF << endl;
+            cout << "Data: " << embarques[i].ocorrencia.dt_hora.Data << endl;
+            cout << "Hora: " << embarques[i].ocorrencia.dt_hora.Hora << endl;
+            cout << "Descrição: " << embarques[i].ocorrencia.descricao << endl;
+            cout << "Número da apólice: " << embarques[i].ocorrencia.numApolice << endl;
+            cout << endl;
+            achou = true;
+        }
+    }
+
+    if(!achou){
+        cout << "Roteiro não encontrado" << endl;
+    }
+}
 
 void alterarOcorrencia(vector<Embarca> &embarques){
     Ocorrencia ocorrencia;
