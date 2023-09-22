@@ -870,6 +870,8 @@ void incluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
     cout << "Digite a duracao real do embarque:(Apenas numeros) ";
     cin >> embarque.duracao;
 
+    embarque.ocorrencia.numApolice = 0;
+
     embarques.push_back(embarque);
 }
 
@@ -1075,13 +1077,15 @@ void incluirOcorrencia(vector<Embarca> &embarques){
 
     for(int i = 0; i < embarques.size(); i++){
         if(strcmp(embarques[i].passageiroCPF, cpf) == 0){
-            achou = true;
-            break;
+            if(embarques[i].ocorrencia.numApolice != 0){
+                achou = true;
+                break;
+            }
         }
     }
 
     if(achou){
-        cout << "Passageiro já embarcado" << endl;
+        cout << "Embarque já possui ocorrencia" << endl;
         return;
     }
 
