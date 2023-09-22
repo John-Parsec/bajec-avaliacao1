@@ -85,7 +85,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
 
 // Ocorrência
 void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
-void incluirOcorrencia(vector<Embarca> &embarques)
+void incluirOcorrencia(vector<Embarca> &embarques);
 void listarOcorrenciasRoteiro(vector<Embarca> &embarques, vector<Roteiro> roteiros);
 void alterarOcorrencia(vector<Embarca> &embarques);
 
@@ -1036,8 +1036,8 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
             case 4:
                 cout << "Espaco para listar por passageiro ocorrencia" << endl;
                 break;
-            case 5:
-                listarOcorrenciasRoteiro(embarques, roteiros);
+            /*case 5:
+                listarOcorrenciasRoteiro(embarques, roteiros);*/
         }
     } while (resposta != 0);
 }
@@ -1089,35 +1089,9 @@ void incluirOcorrencia(vector<Embarca> &embarques){
     }
 }
 
-void listarOcorrenciasRoteiro(vector<Ocorrencia> Ocorrencias, vector<Roteiro> roteiros){
-    string codigo;
-    bool achou = false;
+/*void listarOcorrenciasRoteiro(vec, vector<Roteiro> roteiros){
 
-    cout << "Digite o codigo do roteiro: ";
-    cin >> codigo;
-
-    for (int i = 0; i < roteiros.size(); i++) {
-        if (strcmp(roteiros[i].codigo, codigo.c_str()) == 0) {
-            achou = true;
-            break;
-        }
-    }
-
-    if(achou){
-        cout << "Data\tHora\tDescricao" << endl;
-        for (int i = 0; i < Ocorrencias.size(); i++) {
-            if (strcmp(Ocorrencias[i].dt_hora.Data.c_str(), roteiros[i].Data_hora.Data.c_str()) == 0) {
-                cout << Ocorrencias[i].dt_hora.Data << "\t";
-                cout << Ocorrencias[i].dt_hora.Hora << "\t";
-                cout << Ocorrencias[i].descricao << "\t";
-                cout << endl;
-            }
-        }
-    }
-    else{
-        cout << "Roteiro não encontrado" << endl;
-    }
-}
+}*/
 
 void alterarOcorrencia(vector<Embarca> &embarques){
     Ocorrencia ocorrencia;
