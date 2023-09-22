@@ -89,6 +89,7 @@ void incluirOcorrencia(vector<Embarca> &embarques);
 void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> passageiros);
 void listarEmbarquesPassageiro(vector<Embarca> &vecResult, vector<Embarca> embarques, char cpf[12]);
 void listarOcorrenciasRoteiro(vector<Embarca> &embarques);
+void listarOcorroencias(vector<Embarca> embarques);
 void alterarOcorrencia(vector<Embarca> &embarques);
 void excluirOcorrencia(vector<Embarca> &embarques);
 
@@ -1166,7 +1167,18 @@ void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> 
     }else{
         cout << "Ocorrencias do passageiro: ";
         buscarPassageiros(passageiros, cpf);
-        listarEmbarques(embarquesPass);
+        cout << "Descricao\t\tData\t\tNumero de apolice" << endl;
+        listarOcorroencias(embarques);
+    }
+}
+
+void listarOcorroencias(vector<Embarca> embarques){
+    int i;
+
+    for(i = 0; i<embarques.size(); i++){
+        cout << "Descricao: " << embarques[i].ocorrencia.descricao;
+        cout << " | Data: " << embarques[i].ocorrencia.dt_hora.Data;
+        cout << " | Numero de apolice: " << embarques[i].ocorrencia.numApolice << endl;
     }
 }
 
