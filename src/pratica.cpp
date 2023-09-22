@@ -1186,6 +1186,8 @@ void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> 
         cout << "Descricao\t\tData\t\tNumero de apolice" << endl;
         listarOcorroencias(embarques);
     }
+
+    embarquesPass.clear();
 }
 
 void listarOcorroencias(vector<Embarca> embarques){
