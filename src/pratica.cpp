@@ -86,6 +86,8 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
 // Ocorrência
 void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirOcorrencia(vector<Embarca> &embarques);
+void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> passageiros);
+void listarEmbarquesPassageiro(vector<Embarca> &vecResult, vector<Embarca> embarques, char cpf[12]);
 void listarOcorrenciasRoteiro(vector<Embarca> &embarques);
 void alterarOcorrencia(vector<Embarca> &embarques);
 
@@ -941,7 +943,7 @@ void listarEmbarques(vector<Embarca> embarques)
         cout << "Não há embarques cadastrados" << endl;
         return;
     }
-    cout << "Data\tHora\tDuracao\tRealizada" << endl;
+    cout << "Data\t\tHora\t\tDuracao\t\tRealizada" << endl;
     for (int i = 0; i < embarques.size(); i++)
     {
         cout << embarques[i].dt_hora.Data << "\t";
@@ -1035,7 +1037,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
                 alterarOcorrencia(embarques);
                 break;
             case 4:
-                cout << "Espaco para listar por passageiro ocorrencia" << endl;
+                listarOcorrenciasPassageiro(embarques, passageiros);
                 break;
             case 5:
                 listarOcorrenciasRoteiro(embarques);
@@ -1137,6 +1139,43 @@ void listarOcorrenciasRoteiro(vector<Embarca> &embarques){
 
     if(!achou){
         cout << "Roteiro não encontrado" << endl;
+    }
+}
+
+void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> passageiros){
+    char cpf[12];
+    bool valID, unicoID;
+    vector<Embarca> embarquesPass;
+
+    do{
+        cout << "Digite CPF do Passageiro: ";
+        cin >> cpf;
+        valID = validaCPF(cpf);
+        unicoID = cpfUnico(passageiros, cpf);
+        if (!valID)
+            cout << "CPF inválido." << endl;
+        else if (unicoID)
+            cout << "CPF nao cadastrado." << endl;
+    }while (!valID || unicoID);
+
+    listarEmbarquesPassageiro(embarquesPass, embarques, cpf);
+
+    if(embarquesPass.size() == 0){
+        cout << "Passageiro não possui embarques cadastrados" << endl;
+    }else{
+        cout << "Ocorrencias do passageiro: ";
+        buscarPassageiros(passageiros, cpf);
+        listarEmbarques(embarquesPass);
+    }
+}
+
+void listarEmbarquesPassageiro(vector<Embarca> &vecResult, vector<Embarca> embarques, char cpf[12]){
+    int i;
+    
+    for(i=0; i<embarques.size(); i++){
+        if(strcmp(embarques[i].passageiroCPF, cpf) == 0){
+            vecResult.push_back(embarques[i]);
+        }
     }
 }
 
