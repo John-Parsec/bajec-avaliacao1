@@ -90,6 +90,7 @@ void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> 
 void listarEmbarquesPassageiro(vector<Embarca> &vecResult, vector<Embarca> embarques, char cpf[12]);
 void listarOcorrenciasRoteiro(vector<Embarca> &embarques);
 void alterarOcorrencia(vector<Embarca> &embarques);
+void excluirOcorrencia(vector<Embarca> &embarques);
 
 int main(void){
     vector<Passageiro> passageiros;
@@ -1031,7 +1032,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
                 incluirOcorrencia(embarques);
                 break;
             case 2:
-                cout << "Espaco para excluir ocorrencia" << endl;
+                excluirOcorrencia(embarques);
                 break;
             case 3:
                 alterarOcorrencia(embarques);
@@ -1260,4 +1261,33 @@ void alterarOcorrencia(vector<Embarca> &embarques){
 
     embarques[index].ocorrencia = ocorrencia;
     cout << "Ocorrência alterada com sucesso" << endl;
+}
+
+void excluirOcorrencia(vector<Embarca> &embarques){
+    char cpf[12], codigo[12];
+    bool achou = false;
+    //colocar aqui listagem de ocorrencias
+    cout << "Digite o cpf do passageiro (Apenas 11 numeros): ";
+    cin >> cpf;
+
+    cout << "Digite o codigo do roteiro (Apenas 11 numeros): ";
+    cin >> codigo;
+
+    for (int i = 0; i < embarques.size(); i++) {
+        if (strcmp(embarques[i].passageiroCPF, cpf) == 0 && strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
+            embarques[i].ocorrencia.dt_hora.Data = "";
+            embarques[i].ocorrencia.dt_hora.Hora = "";
+            embarques[i].ocorrencia.descricao = "";
+            embarques[i].ocorrencia.numApolice = -1;
+            achou = true;
+            break;
+        }
+    }
+
+    if(achou){
+        cout << "Ocorrência excluida com sucesso" << endl;
+    }
+    else{
+        cout << "Embarque não encontrado" << endl;
+    }
 }
