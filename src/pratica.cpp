@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -359,12 +360,12 @@ void gestaoPassageiro(vector<Passageiro> &passageiros)
             incluirPassageiro(passageiros);
             break;
         case 2:
-            cout << "Digite o cpf do passageiro:(Apenas 11 numeros) ";
+            cout << "Digite o cpf do passageiro (apenas numeros): ";
             cin >> cpf;
             excluirPassageiro(passageiros, cpf);
             break;
         case 3:
-            cout << "Digite o cpf do passageiro:(Apenas 11 numeros) ";
+            cout << "Digite o cpf do passageiro (apenas numeros):";
             cin >> cpf;
             alterarPassageiro(passageiros, cpf);
             break;
@@ -373,7 +374,7 @@ void gestaoPassageiro(vector<Passageiro> &passageiros)
             listarPassageiros(passageiros);
             break;
         case 5:
-            cout << "Digite o cpf do passageiro:(Apenas 11 numeros) ";
+            cout << "Digite o cpf do passageiro (apenas numeros): ";
             cin >> cpf;
             buscarPassageiros(passageiros, cpf);
             break;
@@ -387,7 +388,7 @@ void incluirPassageiro(vector<Passageiro> &passageiros)
     Passageiro passageiro;
     do
     {
-        cout << "Digite o cpf do passageiro:(Apenas 11 numeros) ";
+        cout << "Digite o cpf do passageiro (apenas numeros): ";
         cin >> passageiro.cpf;
         if (!validaCPF(passageiro.cpf))
         {
@@ -400,11 +401,11 @@ void incluirPassageiro(vector<Passageiro> &passageiros)
     } while (!validaCPF(passageiro.cpf) || !cpfUnico(passageiros, passageiro.cpf));
     cout << "Digite o nome do passageiro: ";
     getline(cin >> ws, passageiro.nome);
-    cout << "Digite a data de nascimento do passageiro:(dd/mm/aaaa) ";
+    cout << "Digite a data de nascimento do passageiro (dd/mm/aaaa): ";
     cin >> passageiro.dtNascimento;
     while (!verificar_dataNascimento(passageiro.dtNascimento))
     {
-        cout << "Data de nascimento inválida, insira novamente:(dd/mm/aaaa) ";
+        cout << "Data de nascimento inválida, insira novamente (dd/mm/aaaa): ";
         cin >> passageiro.dtNascimento;
     }
 
@@ -418,6 +419,7 @@ void incluirPassageiro(vector<Passageiro> &passageiros)
         passageiro.numAutorizacao = -1;
     }
     passageiros.push_back(passageiro);
+    cout << "Passageiro cadastrado com sucesso." << endl;
 }
 
 void listarPassageiros(vector<Passageiro> passageiros)
@@ -427,12 +429,15 @@ void listarPassageiros(vector<Passageiro> passageiros)
         cout << "Não há passageiros cadastrados" << endl;
         return;
     }
-    cout << "CPF\tNome\tData de Nascimento\tNumero de Autorização" << endl;
+    cout << setw(15) << "CPF";
+    cout << setw(30) << "Nome";
+    cout << "  Data de Nascimento";
+    cout << "  Numero de Autorização" << endl;
     for (int i = 0; i < passageiros.size(); i++)
     {
-        cout << passageiros[i].cpf << "\t";
-        cout << passageiros[i].nome << "\t";
-        cout << passageiros[i].dtNascimento << "\t";
+        cout << passageiros[i].cpf;
+        cout << setw(30) <<passageiros[i].nome << "   ";
+        cout << passageiros[i].dtNascimento << "   ";
         if (passageiros[i].numAutorizacao != -1)
             cout << passageiros[i].numAutorizacao;
         cout << endl;
@@ -499,15 +504,15 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12])
         passageiros.at(posicao).nome = resposta;
     }
 
-    cout << "Deseja alterar a data de nascimento? (s/n)";
+    cout << "Deseja alterar a data de nascimento (s/n)? ";
     cin >> resposta;
     if (resposta == "s")
     {
-        cout << "Digite a nova data de nascimento: ";
+        cout << "Digite a nova data de nascimento (dd/mm/aaaa): ";
         cin >> resposta;
         while (!verificar_dataNascimento(resposta))
         {
-            cout << "Data de nascimento inválida, insira novamente: ";
+            cout << "Data de nascimento inválida, insira novamente (dd/mm/aaaa): ";
             cin >> resposta;
         }
 
@@ -515,7 +520,7 @@ void alterarPassageiro(vector<Passageiro> &passageiros, char cpf[12])
     }
     if (!temMaisde18(passageiros.at(posicao).dtNascimento))
     {
-        cout << "Deseja alterar o numero de autorização? (s/n)";
+        cout << "Deseja alterar o numero de autorização(s/n)? ";
         cin >> resposta;
         if (resposta == "s")
         {
