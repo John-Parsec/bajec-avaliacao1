@@ -943,7 +943,7 @@ void listarEmbarques(vector<Embarca> embarques)
         cout << "Não há embarques cadastrados" << endl;
         return;
     }
-    cout << "Data\tHora\tDuracao\tRealizada" << endl;
+    cout << "Data\t\tHora\t\tDuracao\t\tRealizada" << endl;
     for (int i = 0; i < embarques.size(); i++)
     {
         cout << embarques[i].dt_hora.Data << "\t";
@@ -1037,7 +1037,7 @@ void excluirEmbarque(vector<Embarca> &embarques, vector<Passageiro> passageiros,
                 alterarOcorrencia(embarques);
                 break;
             case 4:
-                cout << "Espaco para listar por passageiro ocorrencia" << endl;
+                listarOcorrenciasPassageiro(embarques, passageiros);
                 break;
             case 5:
                 listarOcorrenciasRoteiro(embarques);
@@ -1138,7 +1138,7 @@ void listarOcorrenciasPassageiro(vector<Embarca> &embarques, vector<Passageiro> 
     if(embarquesPass.size() == 0){
         cout << "Passageiro não possui embarques cadastrados" << endl;
     }else{
-        cout << "Ocorrencias do passageiro: " << endl;
+        cout << "Ocorrencias do passageiro: ";
         buscarPassageiros(passageiros, cpf);
         listarEmbarques(embarquesPass);
     }
