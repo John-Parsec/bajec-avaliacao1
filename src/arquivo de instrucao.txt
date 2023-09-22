@@ -1,6 +1,4 @@
 A validação de cpf requer um cpf real, portanto,
-"12345678910" não funcionará, mesmo tendo 11 caracteres,
-que é o tamanho de um cpf. Um cpf real, no entanto, funcionará.
-
-"pratica" é o arquivo que vai ser passado pra parte 1, pois é o mais próximo da atividade
-parte 1, caso precise enviar ;
+"12345678910" não funcionaria, mesmo tendo 11 caracteres,
+que é o tamanho de um cpf. Para fins de testes, foi comentado essa parte
+,ou seja a verificação é apenas na quantidade de digitos.
