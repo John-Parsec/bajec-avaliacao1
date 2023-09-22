@@ -823,8 +823,30 @@ void incluirOcorrencia(vector<Embarca> &embarques){
     cout << "Digite o cpf do passageiro: ";
     cin >> cpf;
 
+    if(!validaCPF(cpf)){
+        cout << "CPF inválido" << endl;
+        return;
+    }
+
+    for(int i = 0; i < embarques.size(); i++){
+        if(strcmp(embarques[i].passageiroCPF, cpf) == 0){
+            achou = true;
+            break;
+        }
+    }
+
+    if(achou){
+        cout << "Passageiro já embarcado" << endl;
+        return;
+    }
+
     cout << "Digite o codigo do roteiro: ";
     cin >> codigo;
+
+    if(!validaCod(codigo)){
+        cout << "Codigo inválido" << endl;
+        return;
+    }
 
     cout << "Digite a data da ocorrencia: ";
     getline(cin >> ws, resposta);
@@ -844,6 +866,9 @@ void incluirOcorrencia(vector<Embarca> &embarques){
 
     cout << "Digite a descricao da ocorrencia: ";
     getline(cin >> ws, ocorrencia.descricao);
+
+    cout << "Digite o numero da apolice: ";
+    cin >> ocorrencia.numApolice;
     
     for (int i = 0; i < embarques.size(); i++) {
         if (strcmp(embarques[i].passageiroCPF, cpf) == 0 && strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
