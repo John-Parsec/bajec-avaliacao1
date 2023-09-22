@@ -81,6 +81,7 @@ vector<Passageiro> listarPassageirosEmbarque(vector<Embarca> embarques, vector<P
 void gestaoOcorrencia(vector<Ocorrencia> &Ocorrencias, vector<Passageiro> passageiros, vector<Roteiro> roteiros);
 void incluirOcorrencia(vector<Ocorrencia> &Ocorrencias);
 void listarOcorrenciasRoteiro(vector<Ocorrencia> Ocorrencias, vector<Roteiro> roteiros);
+void alterarOcorrencia(vector<Embarca> &embarques);
 
 int main(void) {
     vector<Passageiro> passageiros;
@@ -609,7 +610,6 @@ void excluirRoteiro(vector<Roteiro> &roteiros, char codigo[12]) {
         return;
     }
     for (auto x = roteiros.begin(); x != roteiros.end(); x++) {
-        cout << "AAAAAAAAAAAAAAAAAAAAAA";
         if (strcmp(x->codigo, codigo) == 0) {
             roteiros.erase(x);
             cout << "Roteiro excluido com sucesso" << endl;
@@ -881,7 +881,7 @@ void gestaoOcorrencia(vector<Embarca> &embarques, vector<Passageiro> passageiros
                 cout << "Espaco para excluir ocorrencia" << endl;
                 break;
             case 3:
-                cout << "Espaco para alterar ocorrencia" << endl;
+                alterarOcorrencia(embarques);
                 break;
             case 4:
                 cout << "Espaco para listar por passageiro ocorrencia" << endl;
@@ -967,4 +967,87 @@ void listarOcorrenciasRoteiro(vector<Ocorrencia> Ocorrencias, vector<Roteiro> ro
     else{
         cout << "Roteiro não encontrado" << endl;
     }
+}
+
+void alterarOcorrencia(vector<Embarca> &embarques){
+    Ocorrencia ocorrencia;
+    int index;
+    string resposta;
+    char cpf[12], codigo[12];
+    bool achou = false;
+
+    cout << "Digite o cpf do passageiro (Apenas 11 numeros): ";
+    cin >> cpf;
+
+    cout << "Digite o codigo do roteiro (Apenas 11 numeros): ";
+    cin >> codigo;
+
+    for (int i = 0; i < embarques.size(); i++) {
+        if (strcmp(embarques[i].passageiroCPF, cpf) == 0 && strcmp(embarques[i].roteiroCodigo, codigo) == 0) {
+            ocorrencia = embarques[i].ocorrencia;
+            if(ocorrencia.dt_hora.Data == "") {
+                cout << "O embarque não possui ocorrência" << endl;
+                return ;
+            }
+            index = i;
+            achou = true;
+            break;
+        }
+    }
+
+    if(!achou){
+        cout << "Embarque não encontrado" << endl;
+        return ;
+    }
+
+    cout << "Data: " << ocorrencia.dt_hora.Data << endl;
+    cout << "Hora: " << ocorrencia.dt_hora.Hora << endl;
+    cout << "Descrição: " << ocorrencia.descricao << endl;
+    cout << "Número da apólice: " << ocorrencia.numApolice << endl;
+    cout << endl;
+    
+    cout << "Deseja alterar a descrição da ocorrência? (s/n): ";
+    cin >> resposta;
+    if(resposta == "s")
+    {
+        cout << "Digite a descrição da ocorrência: ";
+        getline(cin >> ws, ocorrencia.descricao);
+    }
+
+    cout << "Deseja alterar a data da ocorrência? (s/n): ";
+    cin >> resposta;
+    if(resposta == "s")
+    {
+        cout << "Digite a data da ocorrência:(dd/mm/aaaa) ";
+        getline(cin >> ws, resposta);
+        while(!verificar_data(resposta)){
+            cout << "Data inválida, insira novamente:(dd/mm/aaaa) ";
+            getline(cin >> ws, resposta);
+        }
+        ocorrencia.dt_hora.Data = resposta;
+    }
+
+    cout << "Deseja alterar a hora da ocorrência? (s/n): ";
+    cin >> resposta;
+    if(resposta == "s")
+    {
+        cout << "Digite a hora da ocorrência:(hh:mm) ";
+        getline(cin >> ws, resposta);
+        while(!verificar_hora(resposta)){
+            cout << "Hora inválida, insira novamente:(hh:mm) ";
+            getline(cin >> ws, resposta);
+        }
+        ocorrencia.dt_hora.Hora = resposta;
+    }
+
+    cout << "Deseja alterar o número da apólice? (s/n): ";
+    cin >> resposta;
+    if(resposta == "s")
+    {
+        cout << "Digite o número da apólice: ";
+        cin >> ocorrencia.numApolice;
+    }
+
+    embarques[index].ocorrencia = ocorrencia;
+    cout << "Ocorrência alterada com sucesso" << endl;
 }
